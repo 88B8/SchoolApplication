@@ -1,0 +1,28 @@
+﻿namespace SchoolApplication.Web
+{
+    /// <summary>
+    /// API модель создания или редактирования заявления
+    /// </summary>
+    public class ApplicationRequestApiModel
+    {
+        /// <summary>
+        /// Идентификатор ученика
+        /// </summary>
+        public Guid StudentId { get; set; }
+
+        /// <summary>
+        /// Причина заявления
+        /// </summary>
+        public string Reason { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Дата, с которой ученик отсутствует
+        /// </summary>
+        public DateTime DateFrom { get; set; }
+
+        /// <summary>
+        /// Дата, по которую ученик отсутствует
+        /// </summary>
+        public DateTime DateUntil { get; set; }
+    }
+}
