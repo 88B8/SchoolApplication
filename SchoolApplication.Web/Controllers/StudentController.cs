@@ -9,7 +9,7 @@ namespace SchoolApplication.Web
     /// CRUD контроллер по работе с <see cref="StudentModel"/>
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class StudentController : ControllerBase
     {
         private readonly IStudentService schoolService;
@@ -25,9 +25,9 @@ namespace SchoolApplication.Web
         }
 
         /// <summary>
-        /// Получает список всех <see cref="StudentModel"/>
+        /// Получает список всех учеников
         /// </summary>
-        /// GET: /Student/
+        /// GET: /api/Student/
         [HttpGet]
         [ProducesResponseType(typeof(IReadOnlyCollection<StudentApiModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -38,9 +38,9 @@ namespace SchoolApplication.Web
         }
 
         /// <summary>
-        /// Добавляет нового <see cref="StudentModel"/>
+        /// Добавляет нового ученика
         /// </summary>
-        /// POST: /Student/
+        /// POST: /api/Student/
         [HttpPost]
         [ProducesResponseType(typeof(StudentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
@@ -50,13 +50,13 @@ namespace SchoolApplication.Web
             var requestModel = mapper.Map<StudentCreateModel>(request);
             var result = await schoolService.Create(requestModel, cancellationToken);
 
-            return Ok(mapper.Map<StudentCreateModel>(request));
+            return Ok(mapper.Map<StudentApiModel>(result));
         }
 
         /// <summary>
-        /// Редактирует <see cref="StudentModel"/>
+        /// Редактирует ученика по идентификатору
         /// </summary>
-        /// PUT: /Student/id
+        /// PUT: /api/Student/id
         [HttpPut("{id:guid}")]
         [ProducesResponseType(typeof(StudentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
@@ -73,9 +73,9 @@ namespace SchoolApplication.Web
         }
 
         /// <summary>
-        /// Удаляет <see cref="StudentModel"/> по идентификатору
+        /// Удаляет ученика по идентификатору
         /// </summary>
-        /// DELETE: /Student/id
+        /// DELETE: /api/Student/id
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]

@@ -16,6 +16,16 @@
         public Guid StudentId { get; set; }
 
         /// <summary>
+        /// Идентификатор родителя
+        /// </summary>
+        public Guid ParentId { get; set; }
+
+        /// <summary>
+        /// Идентификатор школы
+        /// </summary>
+        public Guid SchoolId { get; set; }
+
+        /// <summary>
         /// Причина заявления
         /// </summary>
         public string Reason { get; set; } = string.Empty;

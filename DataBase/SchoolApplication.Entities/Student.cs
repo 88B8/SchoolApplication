@@ -6,18 +6,6 @@
     public class Student : BaseAuditEntity
     {
         /// <summary>
-        /// Идентификатор родителя
-        /// </summary>
-        public Guid ParentId { get; set; }
-        public Parent Parent { get; set; }
-
-        /// <summary>
-        /// Идентификатор школы
-        /// </summary>
-        public Guid SchoolId { get; set; }
-        public School School { get; set; }
-
-        /// <summary>
         /// Пол ученика
         /// </summary>
         public Gender Gender { get; set; }

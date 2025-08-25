@@ -53,9 +53,14 @@ namespace SchoolApplication.Web.Tests
         {
             // Arrange
             var studentId = await seeder.SeedStudent();
+            var parentId = await seeder.SeedParent();
+            var schoolId = await seeder.SeedSchool();
+
             var model = new ApplicationRequestApiModel
             {
                 StudentId = studentId,
+                ParentId = parentId,
+                SchoolId = schoolId,
                 Reason = "по семейным обстоятельствам",
                 DateFrom = new DateTime(2025, 07, 13),
                 DateUntil = new DateTime(2025, 07, 14),
@@ -78,9 +83,14 @@ namespace SchoolApplication.Web.Tests
             // Arrange
             var studentId = await seeder.SeedStudent();
             var applicationId = await seeder.SeedApplication();
+            var parentId = await seeder.SeedParent();
+            var schoolId = await seeder.SeedSchool();
+
             var model = new ApplicationRequestApiModel
             {
                 StudentId = studentId,
+                ParentId = parentId,
+                SchoolId = schoolId,
                 Reason = "по семейным обстоятельствам",
                 DateFrom = new DateTime(2025, 07, 13),
                 DateUntil = new DateTime(2025, 07, 14),

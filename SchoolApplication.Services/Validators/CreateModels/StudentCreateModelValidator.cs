@@ -14,9 +14,6 @@ namespace SchoolApplication.Services
 
         public StudentCreateModelValidator()
         {
-            RuleFor(x => x.ParentId)
-                .NotEmpty().WithMessage("Идентификатор родителя обязателен");
-
             RuleFor(x => x.Surname)
                 .NotEmpty().WithMessage("Фамилия обязательна")
                 .Length(MinLength, MaxLength).WithMessage($"Фамилия должна содержать от {MinLength} до {MaxLength} символов");

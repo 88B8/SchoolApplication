@@ -11,19 +11,6 @@ namespace SchoolApplication.Services.Tests.Validators
         private readonly StudentCreateModelValidator validator = new();
 
         [Fact]
-        public void ValidatorShouldErrorWhenParentIdIsEmpty()
-        {
-            // Arrange
-            var model = new StudentCreateModel { ParentId = Guid.Empty };
-
-            // Act
-            var result = validator.TestValidate(model);
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(x => x.ParentId);
-        }
-
-        [Fact]
         public void ValidatorShouldErrorWhenSurnameIsEmpty()
         {
             // Arrange

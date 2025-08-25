@@ -52,12 +52,8 @@ namespace SchoolApplication.Web.Tests
         public async Task AddShouldWork()
         {
             // Arrange
-            var schoolId = await seeder.SeedSchool();
-            var parentId = await seeder.SeedParent();
             var model = new StudentRequestApiModel
             {
-                SchoolId = schoolId,
-                ParentId = parentId,
                 Surname = "Петров",
                 Name = "Петр",
                 Patronymic = "Петрович",
@@ -80,12 +76,8 @@ namespace SchoolApplication.Web.Tests
         {
             // Arrange
             var studentId = await seeder.SeedStudent();
-            var schoolId = await seeder.SeedSchool();
-            var parentId = await seeder.SeedParent();
             var model = new StudentRequestApiModel
             {
-                SchoolId = schoolId,
-                ParentId = parentId,
                 Surname = "Петров",
                 Name = "Петр",
                 Patronymic = "Петрович",

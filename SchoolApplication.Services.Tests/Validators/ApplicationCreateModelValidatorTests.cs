@@ -117,6 +117,8 @@ namespace SchoolApplication.Services.Tests.Validators
             var model = new ApplicationCreateModel
             {
                 StudentId = Guid.NewGuid(),
+                ParentId = Guid.NewGuid(),
+                SchoolId = Guid.NewGuid(),
                 Reason = "Valid reason",
                 DateFrom = DateTime.Today,
                 DateUntil = DateTime.Today.AddDays(1)

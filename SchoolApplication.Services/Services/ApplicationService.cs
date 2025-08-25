@@ -27,6 +27,13 @@ namespace SchoolApplication.Services
             this.applicationWriteRepository = applicationWriteRepository;
         }
 
+        async Task<ApplicationModel> IApplicationService.GetById(Guid id, CancellationToken cancellationToken)
+        {
+            var item = await applicationReadRepository.GetById(id, cancellationToken);
+
+            return mapper.Map<ApplicationModel>(item);
+        }
+
         async Task<IReadOnlyCollection<ApplicationModel>> IApplicationService.GetAll(CancellationToken cancellationToken)
         {
             var items = await applicationReadRepository.GetAll(cancellationToken);

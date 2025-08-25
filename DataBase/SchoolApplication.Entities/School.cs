@@ -1,5 +1,8 @@
 ﻿namespace SchoolApplication.Entities
 {
+    /// <summary>
+    /// Модель школы
+    /// </summary>
     public class School : BaseAuditEntity
     {
         /// <summary>

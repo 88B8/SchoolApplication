@@ -1,18 +1,15 @@
-﻿namespace SchoolApplication.Services.Contracts.Services
+﻿using SchoolApplication.Entities;
+
+namespace SchoolApplication.Services.Contracts
 {
     /// <summary>
-    /// Сервис импорта и экспорта
+    /// Сервис работы с OpenXML
     /// </summary>
     public interface IExcelService
     {
         /// <summary>
-        /// Импорт данных
+        /// Экспорт заявления
         /// </summary>
-        IEnumerable<T> Import<T>(Stream fileStream, string sheetName, CancellationToken cancellationToken) where T : class, new();
-
-        /// <summary>
-        /// Экспорт данных
-        /// </summary>
-        byte[] Export(Dictionary<string, IEnumerable<object>> sheets, CancellationToken cancellationToken);
+        byte[] Export(Application application, CancellationToken cancellationToken);
     }
 }

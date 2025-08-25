@@ -15,10 +15,17 @@ namespace SchoolApplication.Tests.Extensions
         public static Application Application(Action<Application>? settings = null)
         {
             var student = Student();
+            var parent = Parent();
+            var school = School();
+
             var result = new Application
             {
                 StudentId = student.Id,
                 Student = student,
+                ParentId = parent.Id,
+                Parent = parent,
+                SchoolId = school.Id,
+                School = school,
                 Reason = "по семейным обстоятельствам",
                 DateFrom = new DateTime(2025, 07, 13),
                 DateUntil = new DateTime(2025, 07, 14),
@@ -67,14 +74,8 @@ namespace SchoolApplication.Tests.Extensions
         /// </summary>
         public static Student Student(Action<Student>? settings = null)
         {
-            var parent = Parent();
-            var school = School();
             var result = new Student
             {
-                ParentId = parent.Id,
-                Parent = parent,
-                SchoolId = school.Id,
-                School = school,
                 Gender = Gender.Male,
                 Surname = "Петров",
                 Name = "Петр",
@@ -95,6 +96,8 @@ namespace SchoolApplication.Tests.Extensions
             var result = new ApplicationCreateModel
             {
                 StudentId = Guid.NewGuid(),
+                ParentId = Guid.NewGuid(),
+                SchoolId = Guid.NewGuid(),
                 Reason = "по семейным обстоятельствам",
                 DateFrom = new DateTime(2025, 07, 13),
                 DateUntil = new DateTime(2025, 07, 14),
@@ -142,8 +145,6 @@ namespace SchoolApplication.Tests.Extensions
         {
             var result = new StudentCreateModel
             {
-                ParentId = Guid.NewGuid(),
-                SchoolId = Guid.NewGuid(),
                 Gender = GenderModel.Male,
                 Surname = "Петров",
                 Name = "Петр",
@@ -161,10 +162,14 @@ namespace SchoolApplication.Tests.Extensions
         public static ApplicationModel ApplicationModel(Action<ApplicationModel>? settings = null)
         {
             var student = StudentModel();
+            var parent = ParentModel();
+            var school = SchoolModel();
             var result = new ApplicationModel
             {
                 Id = Guid.NewGuid(),
                 StudentId = student.Id,
+                ParentId = parent.Id,
+                SchoolId = school.Id,
                 Reason = "по семейным обстоятельствам",
                 DateFrom = new DateTime(2025, 07, 13),
                 DateUntil = new DateTime(2025, 07, 14),
@@ -212,13 +217,9 @@ namespace SchoolApplication.Tests.Extensions
         /// </summary>
         public static StudentModel StudentModel(Action<StudentModel>? settings = null)
         {
-            var parent = ParentModel();
-            var school = SchoolModel();
             var result = new StudentModel
             {
                 Id = Guid.NewGuid(),
-                ParentId = parent.Id,
-                SchoolId = school.Id,
                 Gender = GenderModel.Male,
                 Surname = "Иванов",
                 Name = "Иван",
@@ -229,57 +230,5 @@ namespace SchoolApplication.Tests.Extensions
             settings?.Invoke(result);
             return result;
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public static ApplicationRequestApiModel ApplicationRequestApiModel(Action<ApplicationRequestApiModel>? settings = null)
-        //{
-            
-        //}
-
-        //public static ParentRequestApiModel ParentRequestApiModel(Action<ParentRequestApiModel>? settings = null)
-        //{
-        //    var result = new ParentRequestApiModel
-        //    {
-        //        Surname = "Петрова",
-        //        Name = "Наталья",
-        //        Patronymic = "Владимировна",
-        //    };
-
-        //    settings?.Invoke(result);
-        //    return result;
-        //}
-
-        //public static SchoolRequestApiModel SchoolRequestApiModel(Action<SchoolRequestApiModel>? settings = null)
-        //{
-        //    var result = new SchoolRequestApiModel
-        //    {
-        //        Name = "Школа №2",
-        //        DirectorName = "Сидоров В.С.",
-        //    };
-
-        //    settings?.Invoke(result);
-        //    return result;
-        //}
-
-        //public static StudentRequestApiModel StudentRequestApiModel(Action<StudentRequestApiModel>? settings = null)
-        //{
-        //    var parent = ParentModel();
-        //    var school = SchoolModel();
-        //    var result = new StudentRequestApiModel
-        //    {
-        //        ParentId = parent.Id,
-        //        SchoolId = school.Id,
-        //        Gender = GenderApiModel.Male,
-        //        Surname = "Иванов",
-        //        Name = "Иван",
-        //        Patronymic = "Иванович",
-        //        Grade = "9А",
-        //    };
-
-        //    settings?.Invoke(result);
-        //    return result;
-        //}
     }
 }

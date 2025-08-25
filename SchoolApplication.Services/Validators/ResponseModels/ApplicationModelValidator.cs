@@ -16,6 +16,12 @@ namespace SchoolApplication.Services
             RuleFor(x => x.StudentId)
                 .NotEmpty().WithMessage("StudentId обязателен");
 
+            RuleFor(x => x.ParentId)
+                .NotEmpty().WithMessage("ParentId обязателен");
+
+            RuleFor(x => x.SchoolId)
+                .NotEmpty().WithMessage("SchoolId обязателен");
+
             RuleFor(x => x.Reason)
                 .NotEmpty().WithMessage("Причина заявления обязательна")
                 .Length(3, 255).WithMessage("Длина причины не должна быть меньше 3 символов и не должна превышать 255 символов");

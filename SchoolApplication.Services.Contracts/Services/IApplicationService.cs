@@ -8,6 +8,11 @@ namespace SchoolApplication.Services.Contracts
     public interface IApplicationService
     {
         /// <summary>
+        /// Возвращает <see cref="ApplicationModel"> по идентификатору
+        /// </summary>
+        Task<ApplicationModel> GetById(Guid id, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Возвращает список <see cref="ApplicationModel"/>
         /// </summary>
         Task<IReadOnlyCollection<ApplicationModel>> GetAll(CancellationToken cancellationToken);

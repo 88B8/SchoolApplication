@@ -19,6 +19,8 @@ namespace SchoolApplication.Services
             CreateMap<ApplicationCreateModel, Application>(MemberList.Destination)
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.Student, opt => opt.Ignore())
+                .ForMember(x => x.Parent, opt => opt.Ignore())
+                .ForMember(x => x.School, opt => opt.Ignore())
                 .ForMember(x => x.CreatedAt, opt => opt.Ignore())
                 .ForMember(x => x.UpdatedAt, opt => opt.Ignore())
                 .ForMember(x => x.DeletedAt, opt => opt.Ignore());
@@ -34,8 +36,6 @@ namespace SchoolApplication.Services
                 .ForMember(x => x.DeletedAt, opt => opt.Ignore());
             CreateMap<StudentCreateModel, Student>(MemberList.Destination)
                 .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.Parent, opt => opt.Ignore())
-                .ForMember(x => x.School, opt => opt.Ignore())
                 .ForMember(x => x.CreatedAt, opt => opt.Ignore())
                 .ForMember(x => x.UpdatedAt, opt => opt.Ignore())
                 .ForMember(x => x.DeletedAt, opt => opt.Ignore());

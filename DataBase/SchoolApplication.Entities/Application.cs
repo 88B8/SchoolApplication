@@ -6,10 +6,34 @@
     public class Application : BaseAuditEntity
     {
         /// <summary>
-        /// Идентификатор
+        /// Идентификатор ученика
         /// </summary>
         public Guid StudentId { get; set; }
+
+        /// <summary>
+        /// Навигационное свойство
+        /// </summary>
         public Student Student { get; set; }
+
+        /// <summary>
+        /// Идентификатор родителя
+        /// </summary>
+        public Guid ParentId { get; set; }
+
+        /// <summary>
+        /// Навигационное свойство
+        /// </summary>
+        public Parent Parent { get; set; }
+
+        /// <summary>
+        /// Идентификатор школы
+        /// </summary>
+        public Guid SchoolId { get; set; }
+
+        /// <summary>
+        /// Навигационное свойство
+        /// </summary>
+        public School School { get; set; }
 
         /// <summary>
         /// Причина заявления

@@ -2,6 +2,9 @@
 
 namespace SchoolApplication.Context.Contracts
 {
+    /// <summary>
+    /// Интерфейс для записей в контекст
+    /// </summary>
     public interface IDbWriter<in TEntity> where TEntity : class
     {
         /// <summary>

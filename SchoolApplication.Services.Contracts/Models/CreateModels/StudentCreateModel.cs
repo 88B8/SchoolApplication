@@ -6,16 +6,6 @@
     public class StudentCreateModel
     {
         /// <summary>
-        /// Идентификатор родителя
-        /// </summary>
-        public Guid ParentId { get; set; }
-
-        /// <summary>
-        /// Идентификатор школы
-        /// </summary>
-        public Guid SchoolId { get; set; }
-
-        /// <summary>
         /// Пол ученика
         /// </summary>
         public GenderModel Gender { get; set; }

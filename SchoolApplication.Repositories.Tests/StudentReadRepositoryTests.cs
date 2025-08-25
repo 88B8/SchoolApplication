@@ -71,9 +71,7 @@ namespace SchoolApplication.Repositories.Tests
             // Assert
             result.Should()
                 .NotBeNull()
-                .And.BeEquivalentTo(student, opt => opt
-                .Excluding(x => x.Parent)
-                .Excluding(x => x.School));
+                .And.BeEquivalentTo(student, opt => opt);
         }
 
         /// <summary>

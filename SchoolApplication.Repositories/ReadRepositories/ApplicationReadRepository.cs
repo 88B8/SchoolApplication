@@ -20,11 +20,17 @@ namespace SchoolApplication.Repositories
 
         Task<IReadOnlyCollection<Application>> IApplicationReadRepository.GetAll(CancellationToken cancellationToken)
             => reader.Read<Application>()
+                .Include(a => a.Student)
+                .Include(a => a.Parent)
+                .Include(a => a.School)
                 .NotDeletedAt()
                 .ToReadOnlyCollectionAsync(cancellationToken);
 
         Task<Application?> IApplicationReadRepository.GetById(Guid id, CancellationToken cancellationToken)
             => reader.Read<Application>()
+                .Include(a => a.Student)
+                .Include(a => a.Parent)
+                .Include(a => a.School)
                 .NotDeletedAt()
                 .ById(id)
                 .FirstOrDefaultAsync(cancellationToken);

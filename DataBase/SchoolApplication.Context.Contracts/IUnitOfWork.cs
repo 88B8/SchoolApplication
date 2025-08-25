@@ -1,7 +1,7 @@
 ﻿namespace SchoolApplication.Context.Contracts
 {
     /// <summary>
-    /// Определяет интерфейс для unit of work
+    /// Интерфейс для unit of work
     /// </summary>
     public interface IUnitOfWork
     {

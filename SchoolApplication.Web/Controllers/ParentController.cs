@@ -9,7 +9,7 @@ namespace SchoolApplication.Web
     /// CRUD контроллер по работе с <see cref="ParentModel"/>
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ParentController : ControllerBase
     {
         private readonly IParentService parentService;
@@ -25,9 +25,9 @@ namespace SchoolApplication.Web
         }
 
         /// <summary>
-        /// Получает список всех <see cref="ParentModel"/>
+        /// Получает список всех родителей
         /// </summary>
-        /// GET: /Parent/
+        /// GET: /api/Parent/
         [HttpGet]
         [ProducesResponseType(typeof(IReadOnlyCollection<ParentApiModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -38,9 +38,9 @@ namespace SchoolApplication.Web
         }
 
         /// <summary>
-        /// Добавляет нового <see cref="ParentModel"/>
+        /// Добавляет нового родителя
         /// </summary>
-        /// POST: /Parent/
+        /// POST: /api/Parent/
         [HttpPost]
         [ProducesResponseType(typeof(ParentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
@@ -50,13 +50,13 @@ namespace SchoolApplication.Web
             var requestModel = mapper.Map<ParentCreateModel>(request);
             var result = await parentService.Create(requestModel, cancellationToken);
 
-            return Ok(mapper.Map<ParentCreateModel>(request));
+            return Ok(mapper.Map<ParentApiModel>(result));
         }
 
         /// <summary>
-        /// Редактирует <see cref="ParentModel"/>
+        /// Редактирует родителя по идентификатору
         /// </summary>
-        /// PUT: /Parent/id
+        /// PUT: /api/Parent/id
         [HttpPut("{id:guid}")]
         [ProducesResponseType(typeof(ParentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
@@ -73,9 +73,9 @@ namespace SchoolApplication.Web
         }
 
         /// <summary>
-        /// Удаляет <see cref="ParentModel"/> по идентификатору
+        /// Удаляет родителя по идентификатору
         /// </summary>
-        /// DELETE: /Parent/id
+        /// DELETE: /api/Parent/id
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
