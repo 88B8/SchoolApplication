@@ -2,45 +2,10 @@
 Автоматизация заполнения заявления на отсутствие в учебном заведении
 # Схема моделей
 ```mermaid
-classDiagram
-    Application --> Parent
-    Application --> Student
-    Application --> School
-    Student .. Gender
-
-    class Application{
-        +Guid Id
-        +Guid StudentId
-        +Guid ParentId
-        +Guid SchoolId
-        +string Reason
-        +DateTime DateFrom
-        +DateTime DateUntil
-    }
-    class Parent{
-        +Guid Id
-        +string Surname
-        +string Name
-        +string Patronymic
-    }
-    class Student{
-        +Guid Id
-        +Gender Gender
-        +string Surname
-        +string Name
-        +string Patronymic
-        +string Grade
-    }
-    class School{
-        +Guid Id
-        +string Name
-        +string DirectorName
-    }
-    class Gender{
-        <<enumeration>>
-        Мужской
-        Женский
-    }
+erDiagram
+    Application ||--|| School: использует
+    Application ||--|| Student: использует
+    Application ||--|| Parent: использует
 ```
 # Пример реального бизнес сценария
 <img width="1200" height="637" alt="target" src="https://github.com/user-attachments/assets/67ce64c3-30f1-4533-b4ec-64f8d14df785" />
@@ -49,42 +14,60 @@ classDiagram
 ## CRUD заявлений
 |TYPE|URL|DESCRIPTION|REQUEST|RESPONSE|CODES|
 |-|-|-|-|-|-|
-| GET | api/Application/{id}/export | Экспортирует заявление | FromRoute: id | File .xlsx | 200 OK<br/>404 NotFound |
-| GET | api/Application/| Получает список всех заявлений | | `IReadOnlyCollection<ApplicationApiModel>` | 200 OK |
-| POST | api/Application/| Добавляет новое заявление | FromBody: `ApplicationRequestApiModel` | `ApplicationApiModel` | 200 OK<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| PUT | api/Application/{id}| Редактирует заявление по идентификатору | FromRoute: id <br/>FromBody: `ApplicationRequestApiModel` | `ApplicationApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| DELETE | api/Application/{id}| Удаляет заявление по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
+| GET | Api/Application/{id}/export | Экспортирует заявление | FromRoute: id | File .xlsx | 200 OK<br/>404 NotFound |
+| GET | Api/Application/| Получает список всех заявлений | | `ApplicationApiModel[]` | 200 OK |
+| GET | Api/Application/{id}| Получает заявление по идентификатору | FromRoute: id | `ApplicationApiModel` | 200 OK<br/>404 NotFound |
+| POST | Api/Application/| Добавляет новое заявление | FromBody: `ApplicationRequestApiModel` | `ApplicationApiModel` | 200 OK<br/>422 UnprocessableEntity |
+| PUT | Api/Application/{id}| Редактирует заявление по идентификатору | FromRoute: id <br/>FromBody: `ApplicationRequestApiModel` | `ApplicationApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
+| DELETE | Api/Application/{id}| Удаляет заявление по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound |
 
 ```javascript
 // ApplicationApiModel
   {
-    "id": "59666fc5-8a98-4a37-8423-bb792cec3a78",
-    "studentId": "5f35bc4a-21d3-4eaa-98bc-6f07f7ecc46b",
-    "parentId": "b0b99f1d-691a-4b62-bd8d-5ae8cc526bcd",
-    "schoolId": "64fe89b3-7b85-4bce-bf77-2197291f7ffa",
-    "reason": "по семейным обстоятельствам",
-    "dateFrom": "2025-08-23T10:43:43.982",
-    "dateUntil": "2025-08-25T10:43:43.982"
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "student": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "gender": 0,
+      "surname": "string",
+      "name": "string",
+      "patronymic": "string",
+      "grade": "string"
+    },
+    "parent": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "surname": "string",
+      "name": "string",
+      "patronymic": "string"
+    },
+    "school": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "directorName": "string"
+    },
+    "reason": "string",
+    "dateFrom": "2025-09-15",
+    "dateUntil": "2025-09-15"
   }
 
-// ApplicationRequestApiModel
+// ApplicationCreateRequestApiModel
   {
     "studentId": "5f35bc4a-21d3-4eaa-98bc-6f07f7ecc46b",
     "parentId": "b0b99f1d-691a-4b62-bd8d-5ae8cc526bcd",
     "schoolId": "64fe89b3-7b85-4bce-bf77-2197291f7ffa",
     "reason": "по семейным обстоятельствам",
-    "dateFrom": "2025-08-23T10:43:43.982",
-    "dateUntil": "2025-08-25T10:43:43.982"
+    "dateFrom": "2025-08-23",
+    "dateUntil": "2025-08-25"
   }
 ```
 
 ## CRUD родителей
 |TYPE|URL|DESCRIPTION|REQUEST|RESPONSE|CODES|
 |-|-|-|-|-|-|
-| GET | api/Parent/|Получает список всех родителей | | `IReadOnlyCollection<ParentApiModel>` | 200 OK |
-| POST | api/Parent/|Добавляет нового родителя | FromBody: `ParentRequestApiModel` | `ParentApiModel` | 200 OK<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| PUT | api/Parent/{id}|Редактирует родителя по идентификатору | FromRoute: id <br/>FromBody: `ParentRequestApiModel` | `ParentApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| DELETE | api/Parent/{id}|Удаляет родителя по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
+| GET | Api/Parent/|Получает список всех родителей | | `ParentApiModel[]` | 200 OK |
+| GET | Api/Parent/{id}| Получает родителя по идентификатору | FromRoute: id | `ParentApiModel` | 200 OK<br/>404 NotFound |
+| POST | Api/Parent/|Добавляет нового родителя | FromBody: `ParentCreateRequestApiModel` | `ParentApiModel` | 200 OK<br/>422 UnprocessableEntity |
+| PUT | Api/Parent/{id}|Редактирует родителя по идентификатору | FromRoute: id <br/>FromBody: `ParentCreateRequestApiModel` | `ParentApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
+| DELETE | Api/Parent/{id}|Удаляет родителя по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
 
 ```javascript
 // ParentApiModel
@@ -95,7 +78,7 @@ classDiagram
     "patronymic": "Игоревна"
   }
 
-// ParentRequestApiModel
+// ParentCreateRequestApiModel
   {
     "surname": "Иванова",
     "name": "Ирина",
@@ -106,10 +89,11 @@ classDiagram
 ## CRUD школ
 |TYPE|URL|DESCRIPTION|REQUEST|RESPONSE|CODES|
 |-|-|-|-|-|-|
-| GET | api/School/|Получает список всех школ | | `IReadOnlyCollection<SchoolApiModel>` | 200 OK |
-| POST | api/School/|Добавляет новую школу | FromBody: `SchoolRequestApiModel` | `SchoolApiModel` | 200 OK<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| PUT | api/School/{id}|Редактирует школу по идентификатору | FromRoute: id <br/>FromBody: `SchoolRequestApiModel` | `SchoolApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| DELETE | api/School/{id}|Удаляет школу по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
+| GET | Api/School/|Получает список всех школ | | `SchoolApiModel[]` | 200 OK |
+| GET | Api/School/| Получает школу по идентификатору | FromRoute: id | `SchoolApiModel` | 200 OK<br/>404 NotFound |
+| POST | Api/School/|Добавляет новую школу | FromBody: `SchoolCreateRequestApiModel` | `SchoolApiModel` | 200 OK<br/>422 UnprocessableEntity |
+| PUT | Api/School/{id}|Редактирует школу по идентификатору | FromRoute: id <br/>FromBody: `SchoolCreateRequestApiModel` | `SchoolApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
+| DELETE | Api/School/{id}|Удаляет школу по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
 
 ```javascript
 // SchoolApiModel
@@ -119,7 +103,7 @@ classDiagram
     "directorName": "Петрова Наталья Дмитриевна"
   }
 
-// SchoolRequestApiModel
+// SchoolCreateRequestApiModel
   {
     "name": "Школа №25",
     "directorName": "Петрова Наталья Дмитриевна"
@@ -129,10 +113,11 @@ classDiagram
 ## CRUD учеников
 |TYPE|URL|DESCRIPTION|REQUEST|RESPONSE|CODES|
 |-|-|-|-|-|-|
-| GET | api/Student/|Получает список всех учеников | | `IReadOnlyCollection<StudentApiModel>` | 200 OK |
-| POST | api/Student/|Добавляет нового ученика | FromBody: `StudentRequestApiModel` | `StudentApiModel` | 200 OK<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| PUT | api/Student/{id}|Редактирует ученика по идентификатору | FromRoute: id <br/>FromBody: `StudentRequestApiModel` | `StudentApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
-| DELETE | api/Student/{id}|Удаляет ученика по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity<br/>400 BadRequest |
+| GET | Api/Student/|Получает список всех учеников | | `StudentApiModel[]` | 200 OK |
+| GET | Api/Student/{id}| Получает ученика по идентификатору | FromRoute: id | `StudentApiModel` | 200 OK<br/>404 NotFound |
+| POST | Api/Student/|Добавляет нового ученика | FromBody: `StudentCreateRequestApiModel` | `StudentApiModel` | 200 OK<br/>422 UnprocessableEntity |
+| PUT | Api/Student/{id}|Редактирует ученика по идентификатору | FromRoute: id <br/>FromBody: `StudentCreateRequestApiModel` | `StudentApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
+| DELETE | Api/Student/{id}|Удаляет ученика по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
 
 ```javascript
 // StudentApiModel
@@ -145,7 +130,7 @@ classDiagram
     "grade": "8А"
   }
 
-// StudentRequestApiModel
+// StudentCreateRequestApiModel
   {
     "gender": 0,
     "surname": "Кузьмин",
