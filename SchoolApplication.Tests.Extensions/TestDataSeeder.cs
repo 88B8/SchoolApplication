@@ -1,4 +1,5 @@
 ﻿using SchoolApplication.Context;
+using SchoolApplication.Entities;
 
 namespace SchoolApplication.Tests.Extensions
 {
@@ -18,55 +19,66 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Возвращает айди существующей школы
+        /// Возвращает существующую школы
         /// </summary>
-        public async Task<Guid> SeedSchool()
+        public async Task<School> SeedSchool(Action<School>? settings = null)
         {
-            var school = TestDataGenerator.School();
+            var school = TestDataGenerator.School(settings);
 
             context.Add(school);
             await context.SaveChangesAsync();
 
-            return school.Id;
+            return school;
         }
 
         /// <summary>
-        /// Возвращает айди существующего родителя
+        /// Возвращает существующего родителя
         /// </summary>
-        public async Task<Guid> SeedParent()
+        public async Task<Parent> SeedParent(Action<Parent>? settings = null)
         {
-            var parent = TestDataGenerator.Parent();
+            var parent = TestDataGenerator.Parent(settings);
 
             context.Add(parent);
             await context.SaveChangesAsync();
 
-            return parent.Id;
+            return parent;
         }
 
         /// <summary>
-        /// Возвращает айди существующего ученика
+        /// Возвращает существующего ученика
         /// </summary>
-        public async Task<Guid> SeedStudent()
+        public async Task<Student> SeedStudent(Action<Student>? settings = null)
         {
-            var student = TestDataGenerator.Student();
+            var student = TestDataGenerator.Student(settings);
 
             context.Add(student);
             await context.SaveChangesAsync();
 
-            return student.Id;
+            return student;
         }
 
         /// <summary>
         /// Возвращает айди существующего заявления
         /// </summary>
-        public async Task<Guid> SeedApplication()
+        public async Task<Application> SeedApplication(Action<Application>? settings = null)
         {
-            var application = TestDataGenerator.Application();
+            var parent = await SeedParent();
+            var student = await SeedStudent();
+            var school = await SeedSchool();
+
+            var application = TestDataGenerator.Application(settings);
+
+            application.Parent = parent;
+            application.ParentId = parent.Id;
+            application.Student = student;
+            application.StudentId = student.Id;
+            application.School = school;
+            application.SchoolId = school.Id;
 
             context.Add(application);
             await context.SaveChangesAsync();
 
-            return application.Id;
+            return application;
         }
     }
 }

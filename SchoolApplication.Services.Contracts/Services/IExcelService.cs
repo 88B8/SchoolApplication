@@ -1,6 +1,6 @@
 ﻿using SchoolApplication.Entities;
 
-namespace SchoolApplication.Services.Contracts
+namespace SchoolApplication.Services.Contracts.Services
 {
     /// <summary>
     /// Сервис работы с OpenXML
@@ -10,6 +10,6 @@ namespace SchoolApplication.Services.Contracts
         /// <summary>
         /// Экспорт заявления
         /// </summary>
-        byte[] Export(Application application, CancellationToken cancellationToken);
+        Stream Export(Application application, CancellationToken cancellationToken);
     }
 }

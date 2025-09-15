@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using SchoolApplication.Services.Contracts;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
+using SchoolApplication.Web.Models.CreateRequestApiModels;
+using SchoolApplication.Web.Models.ResponseModels;
 
-namespace SchoolApplication.Web
+namespace SchoolApplication.Web.Infrastructure
 {
     /// <summary>
     /// Настройка автомаппера
@@ -13,27 +17,17 @@ namespace SchoolApplication.Web
         /// </summary>
         public ApiMapper()
         {
-            CreateMap<ApplicationRequestApiModel, ApplicationCreateModel>(MemberList.Destination);
-            CreateMap<ParentRequestApiModel, ParentCreateModel>(MemberList.Destination);
-            CreateMap<StudentRequestApiModel, StudentCreateModel>(MemberList.Destination);
-            CreateMap<SchoolRequestApiModel, SchoolCreateModel>(MemberList.Destination);
+            CreateMap<ApplicationModel, ApplicationApiModel>(MemberList.Destination);
+            CreateMap<ApplicationCreateRequestApiModel, ApplicationCreateModel>(MemberList.Destination);
 
-            CreateMap<ApplicationRequestApiModel, ApplicationModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore());
-            CreateMap<ParentRequestApiModel, ParentModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore());
-            CreateMap<StudentRequestApiModel, StudentModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore());            
-            CreateMap<SchoolRequestApiModel, SchoolModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore());
+            CreateMap<ParentModel, ParentApiModel>(MemberList.Destination);
+            CreateMap<ParentCreateRequestApiModel, ParentCreateModel>(MemberList.Destination);
 
-            CreateMap<SchoolApiModel, SchoolCreateModel>(MemberList.Destination);
-            CreateMap<ParentApiModel, ParentCreateModel>(MemberList.Destination);
+            CreateMap<StudentModel, StudentApiModel>(MemberList.Destination);
+            CreateMap<StudentCreateRequestApiModel, StudentCreateModel>(MemberList.Destination);
 
-            CreateMap<ApplicationModel, ApplicationApiModel>(MemberList.Destination).ReverseMap();
-            CreateMap<StudentModel, StudentApiModel>(MemberList.Destination).ReverseMap();
-            CreateMap<ParentModel, ParentApiModel>(MemberList.Destination).ReverseMap();
-            CreateMap<SchoolModel, SchoolApiModel>(MemberList.Destination).ReverseMap();
+            CreateMap<SchoolModel, SchoolApiModel>(MemberList.Destination);
+            CreateMap<SchoolCreateRequestApiModel, SchoolCreateModel>(MemberList.Destination);
         }
     }
 }

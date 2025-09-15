@@ -1,4 +1,4 @@
-﻿namespace SchoolApplication.Web
+﻿namespace SchoolApplication.Web.Models.ResponseModels
 {
     /// <summary>
     /// API модель школы

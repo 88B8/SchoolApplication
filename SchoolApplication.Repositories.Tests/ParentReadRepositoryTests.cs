@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Context.Tests;
-using SchoolApplication.Repositories.Contracts;
+using SchoolApplication.Repositories.ReadRepositories;
+using SchoolApplication.Repositories.Contracts.ReadRepositories;
 using SchoolApplication.Tests.Extensions;
 
 namespace SchoolApplication.Repositories.Tests
@@ -28,7 +29,10 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var id = Guid.NewGuid();
-
+            var parent = TestDataGenerator.Parent();
+            Context.Add(parent);
+            await UnitOfWork.SaveChangesAsync();
+            
             // Act
             var result = await parentReadRepository.GetById(id, CancellationToken.None);
 
@@ -44,7 +48,7 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var parent = TestDataGenerator.Parent(x => x.DeletedAt = DateTimeOffset.UtcNow);
-            await Context.AddAsync(parent);
+            Context.Add(parent);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -62,7 +66,7 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var parent = TestDataGenerator.Parent();
-            await Context.AddAsync(parent);
+            Context.Add(parent);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -80,6 +84,11 @@ namespace SchoolApplication.Repositories.Tests
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            var parent = TestDataGenerator.Parent(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.Add(parent);
+            await UnitOfWork.SaveChangesAsync();
+
             // Act
             var result = await parentReadRepository.GetAll(CancellationToken.None);
 
@@ -95,14 +104,18 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var parent = TestDataGenerator.Parent();
-            await Context.AddAsync(parent);
+            var deletedParent = TestDataGenerator.Parent(x => x.DeletedAt = DateTimeOffset.UtcNow);
+
+            Context.AddRange(parent, deletedParent);
             await Context.SaveChangesAsync();
 
             // Act
             var result = await parentReadRepository.GetAll(CancellationToken.None);
 
             // Assert
-            result.Should().NotBeEmpty();
+            result.Should()
+                .ContainSingle()
+                .Which.Should().BeEquivalentTo(parent);
         }
     }
 }

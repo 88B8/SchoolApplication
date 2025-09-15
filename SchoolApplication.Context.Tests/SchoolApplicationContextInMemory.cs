@@ -15,7 +15,7 @@ namespace SchoolApplication.Context.Tests
         /// </summary>
         protected SchoolApplicationContext Context { get; }
 
-        /// <inheritdoc cref="IUnitOfWork"
+        /// <inheritdoc cref="IUnitOfWork"/>
         protected IUnitOfWork UnitOfWork => Context;
 
         /// <summary>

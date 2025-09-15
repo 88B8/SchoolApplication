@@ -1,9 +1,12 @@
-﻿using SchoolApplication.Common;
+﻿using SchoolApplication.Common.Contracts;
+using SchoolApplication.Common.Infrastructure;
 using SchoolApplication.Context;
 using SchoolApplication.Repositories;
 using SchoolApplication.Services;
+using SchoolApplication.Services.Infrastructure;
+using SchoolApplication.Web.Infrastructure;
 
-namespace SchoolApplication.Web
+namespace SchoolApplication.Web.Extensions
 {
     /// <summary>
     /// Расширения для <see cref="IServiceCollection"/>

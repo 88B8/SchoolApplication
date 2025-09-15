@@ -8,6 +8,6 @@
         /// <summary>
         /// Экспорт заявления по идентификатору
         /// </summary>
-        Task<byte[]> ExportById(Guid id, CancellationToken cancellationToken);
+        Task<Stream> ExportById(Guid id, CancellationToken cancellationToken);
     }
 }

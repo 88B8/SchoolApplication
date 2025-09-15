@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Entities.Contracts.ValidationRules;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
 
-namespace SchoolApplication.Services
+namespace SchoolApplication.Services.Validators.CreateModels
 {
     /// <summary>
     /// Валидация <see cref="ApplicationCreateModel"/>
@@ -14,17 +15,21 @@ namespace SchoolApplication.Services
         public ApplicationCreateModelValidator()
         {
             RuleFor(x => x.StudentId)
-                .NotEmpty().WithMessage("StudentId обязателен");
+                .NotEmpty()
+                .WithMessage("StudentId обязателен");
 
             RuleFor(x => x.ParentId)
-                .NotEmpty().WithMessage("ParentId обязателен");
+                .NotEmpty()
+                .WithMessage("ParentId обязателен");
 
             RuleFor(x => x.SchoolId)
-                .NotEmpty().WithMessage("SchoolId обязателен");
+                .NotEmpty()
+                .WithMessage("SchoolId обязателен");
 
             RuleFor(x => x.Reason)
                 .NotEmpty().WithMessage("Причина заявления обязательна")
-                .Length(3, 255).WithMessage("Длина причины не должна быть меньше 3 символов и не должна превышать 255 символов");
+                .Length(ApplicationValidationRules.ReasonMinLength, ApplicationValidationRules.ReasonMaxLength)
+                .WithMessage("Длина причины не должна быть меньше 3 символов и не должна превышать 255 символов");
 
             RuleFor(x => x.DateFrom)
                 .LessThanOrEqualTo(x => x.DateUntil)

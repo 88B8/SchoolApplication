@@ -1,38 +1,15 @@
-﻿namespace SchoolApplication.Services.Contracts
+﻿using SchoolApplication.Services.Contracts.Models.CreateModels;
+
+namespace SchoolApplication.Services.Contracts.Models.RequestModels
 {
     /// <summary>
     /// Модель ученика
     /// </summary>
-    public class StudentModel
+    public class StudentModel : StudentCreateModel
     {
         /// <summary>
         /// Идентификатор
         /// </summary>
         public Guid Id { get; set; }
-
-        /// <summary>
-        /// Пол ученика
-        /// </summary>
-        public GenderModel Gender { get; set; }
-
-        /// <summary>
-        /// Фамилия
-        /// </summary>
-        public string Surname { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Имя
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Отчество
-        /// </summary>
-        public string Patronymic { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Класс ученика
-        /// </summary>
-        public string Grade { get; set; } = string.Empty;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SchoolApplication.Services.Contracts
+﻿namespace SchoolApplication.Services.Contracts.Models.CreateModels
 {
     /// <summary>
     /// Модель создания заявления
@@ -28,11 +28,11 @@
         /// <summary>
         /// Дата, с которой ученик отсутствует
         /// </summary>
-        public DateTime DateFrom { get; set; }
+        public DateOnly DateFrom { get; set; }
 
         /// <summary>
         /// Дата, по которую ученик отсутствует
         /// </summary>
-        public DateTime DateUntil { get; set; }
+        public DateOnly DateUntil { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SchoolApplication.Services.Contracts
+﻿namespace SchoolApplication.Services.Contracts.Models.RequestModels
 {
     /// <summary>
     /// Модель заявления
@@ -11,19 +11,19 @@
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Идентификатор ученика
+        /// Навигационное свойство родителя
         /// </summary>
-        public Guid StudentId { get; set; }
+        public ParentModel Parent { get; set; } = null!;
 
         /// <summary>
-        /// Идентификатор родителя
+        /// Навигационное свойство школы
         /// </summary>
-        public Guid ParentId { get; set; }
+        public SchoolModel School { get; set; } = null!;
 
         /// <summary>
-        /// Идентификатор школы
+        /// Навигационное свойство ученика
         /// </summary>
-        public Guid SchoolId { get; set; }
+        public StudentModel Student { get; set; } = null!;
 
         /// <summary>
         /// Причина заявления
@@ -33,11 +33,11 @@
         /// <summary>
         /// Дата, с которой ученик отсутствует
         /// </summary>
-        public DateTime DateFrom { get; set; }
+        public DateOnly DateFrom { get; set; }
 
         /// <summary>
         /// Дата, по которую ученик отсутствует
         /// </summary>
-        public DateTime DateUntil { get; set; }
+        public DateOnly DateUntil { get; set; }
     }
 }

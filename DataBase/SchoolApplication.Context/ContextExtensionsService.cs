@@ -11,7 +11,6 @@ namespace SchoolApplication.Context
         /// <summary>
         /// Регистрирует контекст
         /// </summary>
-        /// <param name="service"></param>
         public static void RegisterContext(this IServiceCollection service)
         {
             service.AddScoped<IReader>(x => x.GetRequiredService<SchoolApplicationContext>());

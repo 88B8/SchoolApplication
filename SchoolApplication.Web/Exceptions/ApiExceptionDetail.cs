@@ -1,4 +1,4 @@
-﻿namespace SchoolApplication.Web
+﻿namespace SchoolApplication.Web.Exceptions
 {
     /// <summary>
     /// Информация об ошибке работы API
@@ -8,7 +8,7 @@
         /// <summary>
         /// Сообщение об ошибке
         /// </summary>
-        public string Message { get; set; } = string.Empty;
+        public string Message { get; set; }
 
         /// <summary>
         /// ctor

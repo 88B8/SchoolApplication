@@ -1,6 +1,8 @@
 ﻿using SchoolApplication.Entities;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
 
-namespace SchoolApplication.Services.Contracts
+namespace SchoolApplication.Services.Contracts.Services
 {
     /// <summary>
     /// Сервис <see cref="Application"/>
@@ -8,7 +10,7 @@ namespace SchoolApplication.Services.Contracts
     public interface IApplicationService
     {
         /// <summary>
-        /// Возвращает <see cref="ApplicationModel"> по идентификатору
+        /// Возвращает <see cref="ApplicationModel"/> по идентификатору
         /// </summary>
         Task<ApplicationModel> GetById(Guid id, CancellationToken cancellationToken);
 
@@ -23,12 +25,12 @@ namespace SchoolApplication.Services.Contracts
         Task<ApplicationModel> Create(ApplicationCreateModel model, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Редактирует сущность <see cref="ApplicationModel"/>
+        /// Редактирует сущность <see cref="ApplicationModel"/> по идентификатору
         /// </summary>
-        Task<ApplicationModel> Edit(ApplicationModel model, CancellationToken cancellationToken);
+        Task<ApplicationModel> Edit(Guid id, ApplicationCreateModel model, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Удаляет <see cref="Application"/> по идентификатору
+        /// Удаляет <see cref="ApplicationModel"/> по идентификатору
         /// </summary>
         Task Delete(Guid id, CancellationToken cancellationToken);
     }

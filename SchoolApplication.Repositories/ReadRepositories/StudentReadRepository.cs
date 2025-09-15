@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities;
-using SchoolApplication.Repositories.Contracts;
+using SchoolApplication.Repositories.Contracts.ReadRepositories;
 
-namespace SchoolApplication.Repositories
+namespace SchoolApplication.Repositories.ReadRepositories
 {
-    /// <inheritdoc cref="IStudentReadRepository"
+    /// <inheritdoc cref="IStudentReadRepository"/>
     public class StudentReadRepository : IStudentReadRepository, IRepositoryAnchor
     {
         private readonly IReader reader;

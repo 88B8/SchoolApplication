@@ -7,17 +7,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SchoolApplication.Context;
 
-namespace SchoolApplication.Web.Tests
+namespace SchoolApplication.Web.Tests.Infrastructure
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     public class TestWebApplicationFactory : WebApplicationFactory<Program>
     {
         /// <inheritdoc cref="WebApplicationFactory{TEntryPoint}.CreateHost"/>
         protected override IHost CreateHost(IHostBuilder builder)
         {
-            builder.UseEnvironment("integration");
+            builder.ConfigureWebHost(x => x.ConfigureTestAppConfiguration());
             return base.CreateHost(builder);
         }
 
@@ -32,7 +30,7 @@ namespace SchoolApplication.Web.Tests
                 {
                     services.Remove(descriptor);
                 }
-                services.AddSingleton<DbContextOptions<SchoolApplicationContext>>(provider =>
+                services.AddSingleton(provider =>
                 {
                     var configuration = provider.GetRequiredService<IConfiguration>();
                     var connectionString = configuration.GetConnectionString("IntegrationConnection");

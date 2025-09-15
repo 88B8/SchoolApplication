@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <RootNamespace>SchoolApplication.Services</RootNamespace>
+	  <AssemblyName>SchoolApplication.Services</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +19,7 @@
     <ProjectReference Include="..\DataBase\SchoolApplication.Context.Contracts\SchoolApplication.Context.Contracts.csproj" />
     <ProjectReference Include="..\DataBase\SchoolApplication.Context\SchoolApplication.Context.csproj" />
     <ProjectReference Include="..\DataBase\SchoolApplication.Entities\SchoolApplication.Entities.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Common\SchoolApplication.Common.csproj" />
     <ProjectReference Include="..\SchoolApplication.Repositories.Contracts\SchoolApplication.Repositories.Contracts.csproj" />
     <ProjectReference Include="..\SchoolApplication.Services.Contracts\SchoolApplication.Services.Contracts.csproj" />
   </ItemGroup>

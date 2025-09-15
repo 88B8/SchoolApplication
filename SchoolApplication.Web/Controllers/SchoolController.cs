@@ -1,33 +1,51 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SchoolApplication.Services.Contracts;
-using System.ComponentModel.DataAnnotations;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
+using SchoolApplication.Services.Contracts.Services;
+using SchoolApplication.Web.Exceptions;
+using SchoolApplication.Web.Models.CreateRequestApiModels;
+using SchoolApplication.Web.Models.ResponseModels;
 
-namespace SchoolApplication.Web
+namespace SchoolApplication.Web.Controllers
 {
     /// <summary>
     /// CRUD контроллер по работе с <see cref="SchoolModel"/>
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("Api/[controller]")]
     public class SchoolController : ControllerBase
     {
         private readonly ISchoolService schoolService;
+        private readonly IValidateService validateService;
         private readonly IMapper mapper;
 
         /// <summary>
         /// ctor
         /// </summary>
-        public SchoolController(ISchoolService schoolService, IMapper mapper)
+        public SchoolController(ISchoolService schoolService, IValidateService validateService, IMapper mapper)
         {
             this.schoolService = schoolService;
+            this.validateService = validateService;
             this.mapper = mapper;
+        }
+
+        /// <summary>
+        /// Получает школу по идентификатору
+        /// </summary>
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(SchoolApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await schoolService.GetById(id, cancellationToken);
+
+            return Ok(mapper.Map<SchoolApiModel>(result));
         }
 
         /// <summary>
         /// Получает список всех школ
         /// </summary>
-        /// GET: /api/School/
         [HttpGet]
         [ProducesResponseType(typeof(IReadOnlyCollection<SchoolApiModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -40,15 +58,14 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Добавляет новую школу
         /// </summary>
-        /// POST: /api/School/
         [HttpPost]
         [ProducesResponseType(typeof(SchoolApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(SchoolRequestApiModel request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(SchoolCreateRequestApiModel request, CancellationToken cancellationToken)
         {
-            var requestModel = mapper.Map<SchoolCreateModel>(request);
-            var result = await schoolService.Create(requestModel, cancellationToken);
+            var requestCreateModel = mapper.Map<SchoolCreateModel>(request);
+            await validateService.Validate(requestCreateModel, cancellationToken);
+            var result = await schoolService.Create(requestCreateModel, cancellationToken);
 
             return Ok(mapper.Map<SchoolApiModel>(result));
         }
@@ -56,18 +73,15 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Редактирует школу по идентификатору
         /// </summary>
-        /// PUT: /api/School/id
         [HttpPut("{id:guid}")]
         [ProducesResponseType(typeof(SchoolApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] SchoolRequestApiModel request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Edit(Guid id, SchoolCreateRequestApiModel request, CancellationToken cancellationToken)
         {
-            var requestModel = mapper.Map<SchoolModel>(request);
-            requestModel.Id = id;
-
-            var result = await schoolService.Edit(requestModel, cancellationToken);
+            var requestCreateModel = mapper.Map<SchoolCreateModel>(request);
+            await validateService.Validate(requestCreateModel, cancellationToken);
+            var result = await schoolService.Edit(id, requestCreateModel, cancellationToken);
 
             return Ok(mapper.Map<SchoolApiModel>(result));
         }
@@ -75,13 +89,10 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Удаляет школу по идентификатору
         /// </summary>
-        /// DELETE: /api/School/id
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Delete([Required] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             await schoolService.Delete(id, cancellationToken);
             return Ok();

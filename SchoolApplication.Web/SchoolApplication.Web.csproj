@@ -5,20 +5,18 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <RootNamespace>SchoolApplication.Web</RootNamespace>
+	  <AssemblyName>SchoolApplication.Web</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.17">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataBase\SchoolApplication.Context\SchoolApplication.Context.csproj" />
-    <ProjectReference Include="..\SchoolApplication.Common\SchoolApplication.Common.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Common.Infrastructure\SchoolApplication.Common.Infrastructure.csproj" />
     <ProjectReference Include="..\SchoolApplication.Repositories\SchoolApplication.Repositories.csproj" />
     <ProjectReference Include="..\SchoolApplication.Services.Contracts\SchoolApplication.Services.Contracts.csproj" />
     <ProjectReference Include="..\SchoolApplication.Services\SchoolApplication.Services.csproj" />

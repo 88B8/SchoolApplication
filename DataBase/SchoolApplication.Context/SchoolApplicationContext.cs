@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities.Configurations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SchoolApplication.Context
 {
@@ -10,16 +11,12 @@ namespace SchoolApplication.Context
     public class SchoolApplicationContext : DbContext, IReader, IWriter, IUnitOfWork
     {
         /// <summary>
-        /// ctor
+        /// Инициализирует новый экземпляр контекста базы данных
         /// </summary>
-        public SchoolApplicationContext(DbContextOptions<SchoolApplicationContext> options) : base(options)
-        {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
-        }
+        public SchoolApplicationContext(DbContextOptions<SchoolApplicationContext> options) : base(options) { }
 
         /// <summary>
-        /// 
+        /// Настраивает модели
         /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,13 +30,13 @@ namespace SchoolApplication.Context
                 .AsNoTracking()
                 .AsQueryable();
 
-        void IWriter.Add<TEntity>(TEntity entity)
+        void IWriter.Add<TEntity>([NotNull] TEntity entity)
             => base.Entry(entity).State = EntityState.Added;
 
-        void IWriter.Update<TEntity>(TEntity entity)
+        void IWriter.Update<TEntity>([NotNull] TEntity entity)
             => base.Entry(entity).State = EntityState.Modified;
 
-        void IWriter.Delete<TEntity>(TEntity entity)
+        void IWriter.Delete<TEntity>([NotNull] TEntity entity)
             => base.Entry(entity).State = EntityState.Deleted;
 
         async Task<int> IUnitOfWork.SaveChangesAsync(CancellationToken cancellationToken)

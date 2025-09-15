@@ -1,28 +1,34 @@
 ﻿using AutoMapper;
 using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities;
-using SchoolApplication.Repositories.Contracts;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Repositories.Contracts.ReadRepositories;
+using SchoolApplication.Repositories.Contracts.WriteRepositories;
+using SchoolApplication.Services.Contracts.Exceptions;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
+using SchoolApplication.Services.Contracts.Services;
 
-namespace SchoolApplication.Services
+namespace SchoolApplication.Services.Services
 {
     /// <inheritdoc cref="IStudentService"/>
     public class StudentService : IStudentService, IServiceAnchor
     {
         private readonly IStudentReadRepository studentReadRepository;
-        private readonly IValidateService validateService;
+        private readonly IApplicationReadRepository applicationReadRepository;
         private readonly IStudentWriteRepository studentWriteRepository;
+        private readonly IApplicationWriteRepository applicationWriteRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
         /// <summary>
         /// ctor
         /// </summary>
-        public StudentService(IStudentReadRepository studentReadRepository, IValidateService validateService, IStudentWriteRepository studentWriteRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public StudentService(IStudentReadRepository studentReadRepository, IApplicationReadRepository applicationReadRepository, IStudentWriteRepository studentWriteRepository, IApplicationWriteRepository applicationWriteRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.studentReadRepository = studentReadRepository;
-            this.validateService = validateService;
+            this.applicationReadRepository = applicationReadRepository;
             this.studentWriteRepository = studentWriteRepository;
+            this.applicationWriteRepository = applicationWriteRepository;
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
@@ -34,9 +40,16 @@ namespace SchoolApplication.Services
             return mapper.Map<IReadOnlyCollection<StudentModel>>(items);
         }
 
+        async Task<StudentModel> IStudentService.GetById(Guid id, CancellationToken cancellationToken)
+        {
+            var item = await studentReadRepository.GetById(id, cancellationToken)
+                ?? throw new SchoolApplicationNotFoundException($"Не удалось найти ученика с идентификатором {id}");
+
+            return mapper.Map<StudentModel>(item);
+        }
+
         async Task<StudentModel> IStudentService.Create(StudentCreateModel model, CancellationToken cancellationToken)
         {
-            await validateService.Validate(model, cancellationToken);
             var item = mapper.Map<Student>(model);
 
             studentWriteRepository.Add(item);
@@ -44,37 +57,40 @@ namespace SchoolApplication.Services
 
             return mapper.Map<StudentModel>(item);
         }
-
-        async Task<StudentModel> IStudentService.Edit(StudentModel model, CancellationToken cancellationToken)
+        async Task<StudentModel> IStudentService.Edit(Guid id, StudentCreateModel model, CancellationToken cancellationToken)
         {
-            await validateService.Validate(model, cancellationToken);
-            var entity = await studentReadRepository.GetById(model.Id, cancellationToken);
+            var dbModel = await studentReadRepository.GetById(id, cancellationToken)
+                ?? throw new SchoolApplicationNotFoundException($"Не удалось найти ученика с идентификатором {id}");
 
-            if (entity == null)
-            {
-                throw new SchoolApplicationNotFoundException($"Не удалось найти ученика с идентификатором {model.Id}");
-            }
+            var entityToUpdate = mapper.Map<Student>(dbModel);
+            mapper.Map(model, entityToUpdate);
 
-            var createdAt = entity.CreatedAt;
-            entity = mapper.Map<Student>(model);
-            entity.CreatedAt = createdAt;
-
-            studentWriteRepository.Update(entity);
+            studentWriteRepository.Update(entityToUpdate);
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return mapper.Map<StudentModel>(entity);
+            var updatedEntity = await studentReadRepository.GetById(entityToUpdate.Id, cancellationToken);
+
+            return mapper.Map<StudentModel>(updatedEntity);
         }
 
         async Task IStudentService.Delete(Guid id, CancellationToken cancellationToken)
         {
-            var entity = await studentReadRepository.GetById(id, cancellationToken);
-
-            if (entity == null)
-            {
-                throw new SchoolApplicationNotFoundException($"Не удалось найти ученика с идентификатором {id}");
-            }
+            var entity = await studentReadRepository.GetById(id, cancellationToken)
+                ?? throw new SchoolApplicationNotFoundException($"Не удалось найти ученика с идентификатором {id}");
 
             studentWriteRepository.Delete(entity);
+
+            var existedApplicationDbModels = await applicationReadRepository.GetAll(cancellationToken);
+            var existedApplications = mapper.Map<IReadOnlyCollection<Application>>(existedApplicationDbModels);
+
+            foreach (var application in existedApplications)
+            {
+                if (application.Student.Id == id)
+                {
+                    applicationWriteRepository.Delete(application);
+                }
+            }
+
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

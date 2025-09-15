@@ -1,38 +1,56 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SchoolApplication.Services.Contracts;
-using System.ComponentModel.DataAnnotations;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
+using SchoolApplication.Services.Contracts.Services;
+using SchoolApplication.Web.Exceptions;
+using SchoolApplication.Web.Models.CreateRequestApiModels;
+using SchoolApplication.Web.Models.ResponseModels;
 
-namespace SchoolApplication.Web
+namespace SchoolApplication.Web.Controllers
 {
     /// <summary>
     /// CRUD контроллер по работе с <see cref="StudentModel"/>
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("Api/[controller]")]
     public class StudentController : ControllerBase
     {
-        private readonly IStudentService schoolService;
+        private readonly IStudentService studentService;
+        private readonly IValidateService validateService;
         private readonly IMapper mapper;
 
         /// <summary>
         /// ctor
         /// </summary>
-        public StudentController(IStudentService schoolService, IMapper mapper)
+        public StudentController(IStudentService studentService, IValidateService validateService, IMapper mapper)
         {
-            this.schoolService = schoolService;
+            this.studentService = studentService;
+            this.validateService = validateService;
             this.mapper = mapper;
+        }
+
+        /// <summary>
+        /// Получает ученика по идентификатору
+        /// </summary>
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(StudentApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await studentService.GetById(id, cancellationToken);
+
+            return Ok(mapper.Map<StudentApiModel>(result));
         }
 
         /// <summary>
         /// Получает список всех учеников
         /// </summary>
-        /// GET: /api/Student/
         [HttpGet]
         [ProducesResponseType(typeof(IReadOnlyCollection<StudentApiModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var result = await schoolService.GetAll(cancellationToken);
+            var result = await studentService.GetAll(cancellationToken);
 
             return Ok(mapper.Map<IReadOnlyCollection<StudentApiModel>>(result));
         }
@@ -40,15 +58,14 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Добавляет нового ученика
         /// </summary>
-        /// POST: /api/Student/
         [HttpPost]
         [ProducesResponseType(typeof(StudentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(StudentRequestApiModel request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(StudentCreateRequestApiModel request, CancellationToken cancellationToken)
         {
-            var requestModel = mapper.Map<StudentCreateModel>(request);
-            var result = await schoolService.Create(requestModel, cancellationToken);
+            var requestCreateModel = mapper.Map<StudentCreateModel>(request);
+            await validateService.Validate(requestCreateModel, cancellationToken);
+            var result = await studentService.Create(requestCreateModel, cancellationToken);
 
             return Ok(mapper.Map<StudentApiModel>(result));
         }
@@ -56,18 +73,15 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Редактирует ученика по идентификатору
         /// </summary>
-        /// PUT: /api/Student/id
         [HttpPut("{id:guid}")]
         [ProducesResponseType(typeof(StudentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] StudentRequestApiModel request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Edit(Guid id, StudentCreateRequestApiModel request, CancellationToken cancellationToken)
         {
-            var requestModel = mapper.Map<StudentModel>(request);
-            requestModel.Id = id;
-
-            var result = await schoolService.Edit(requestModel, cancellationToken);
+            var requestCreateModel = mapper.Map<StudentCreateModel>(request);
+            await validateService.Validate(requestCreateModel, cancellationToken);
+            var result = await studentService.Edit(id, requestCreateModel, cancellationToken);
 
             return Ok(mapper.Map<StudentApiModel>(result));
         }
@@ -75,15 +89,12 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Удаляет ученика по идентификатору
         /// </summary>
-        /// DELETE: /api/Student/id
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Delete([Required] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await schoolService.Delete(id, cancellationToken);
+            await studentService.Delete(id, cancellationToken);
             return Ok();
         }
     }

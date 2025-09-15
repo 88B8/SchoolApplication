@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Services.Contracts.Exceptions;
+using SchoolApplication.Web.Exceptions;
 
-namespace SchoolApplication.Web
+namespace SchoolApplication.Web.Infrastructure
 {
     /// <summary>
     /// Фильтр обработки ошибок

@@ -1,6 +1,6 @@
 ﻿using SchoolApplication.Entities;
 
-namespace SchoolApplication.Repositories.Contracts
+namespace SchoolApplication.Repositories.Contracts.ReadRepositories
 {
     /// <summary>
     /// Репозиторий чтения сущности <see cref="School"/>

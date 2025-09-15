@@ -1,5 +1,7 @@
 ﻿using FluentValidation.TestHelper;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Entities.Contracts.ValidationRules;
+using SchoolApplication.Services.Validators.CreateModels;
+using SchoolApplication.Tests.Extensions;
 
 namespace SchoolApplication.Services.Tests.Validators
 {
@@ -11,16 +13,16 @@ namespace SchoolApplication.Services.Tests.Validators
         private readonly ApplicationCreateModelValidator validator = new();
 
         /// <summary>
-        /// Тест на ошибку при пустом айди
+        /// Тест на ошибку при пустом айди ученика
         /// </summary>
         [Fact]
         public void ValidatorShouldErrorWhenStudentIdIsEmpty()
         {
             // Arrange
-            var model = new ApplicationCreateModel
+            var model = TestDataGenerator.ApplicationCreateModel(x =>
             {
-                StudentId = Guid.Empty
-            };
+                x.StudentId = Guid.Empty;
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -30,16 +32,54 @@ namespace SchoolApplication.Services.Tests.Validators
         }
 
         /// <summary>
+        /// Тест на ошибку при пустом айди родителя
+        /// </summary>
+        [Fact]
+        public void ValidatorShouldErrorWhenParentIdIsEmpty()
+        {
+            // Arrange
+            var model = TestDataGenerator.ApplicationCreateModel(x =>
+            {
+                x.ParentId = Guid.Empty;
+            });
+
+            // Act
+            var result = validator.TestValidate(model);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.ParentId);
+        }
+
+        /// <summary>
+        /// Тест на ошибку при пустом айди школы
+        /// </summary>
+        [Fact]
+        public void ValidatorShouldErrorWhenSchoolIdIsEmpty()
+        {
+            // Arrange
+            var model = TestDataGenerator.ApplicationCreateModel(x =>
+            {
+                x.SchoolId = Guid.Empty;
+            });
+
+            // Act
+            var result = validator.TestValidate(model);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.SchoolId);
+        }
+
+        /// <summary>
         /// Тест на ошибку при пустой причине
         /// </summary>
         [Fact]
         public void ValidatorShouldErrorWhenReasonIsEmpty()
         {
             // Arrange
-            var model = new ApplicationCreateModel
+            var model = TestDataGenerator.ApplicationCreateModel(x =>
             {
-                Reason = ""
-            };
+                x.Reason = string.Empty;
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -55,10 +95,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenReasonTooShort()
         {
             // Arrange
-            var model = new ApplicationCreateModel
+            var model = TestDataGenerator.ApplicationCreateModel(x =>
             {
-                Reason = "ab"
-            };
+                x.Reason = new string('a', ApplicationValidationRules.ReasonMinLength - 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -68,16 +108,16 @@ namespace SchoolApplication.Services.Tests.Validators
         }
 
         /// <summary>
-        /// Тест на ошибка при длинной причине
+        /// Тест на ошибку при длинной причине
         /// </summary>
         [Fact]
         public void ValidatorShouldErrorWhenReasonTooLong()
         {
             // Arrange
-            var model = new ApplicationCreateModel
+            var model = TestDataGenerator.ApplicationCreateModel(x =>
             {
-                Reason = new string('a', 256)
-            };
+                x.Reason = new string('a', ApplicationValidationRules.ReasonMaxLength + 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -93,11 +133,11 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenDateFromIsAfterDateUntil()
         {
             // Arrange
-            var model = new ApplicationCreateModel
+            var model = TestDataGenerator.ApplicationCreateModel(x =>
             {
-                DateFrom = DateTime.Today.AddDays(1),
-                DateUntil = DateTime.Today
-            };
+                x.DateFrom = DateOnly.FromDateTime(DateTime.Today).AddDays(1);
+                x.DateUntil = DateOnly.FromDateTime(DateTime.Today);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -114,15 +154,7 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldPassWhenModelIsValid()
         {
             // Arrange
-            var model = new ApplicationCreateModel
-            {
-                StudentId = Guid.NewGuid(),
-                ParentId = Guid.NewGuid(),
-                SchoolId = Guid.NewGuid(),
-                Reason = "Valid reason",
-                DateFrom = DateTime.Today,
-                DateUntil = DateTime.Today.AddDays(1)
-            };
+            var model = TestDataGenerator.ApplicationCreateModel();
 
             // Act
             var result = validator.TestValidate(model);

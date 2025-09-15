@@ -1,33 +1,52 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SchoolApplication.Services.Contracts;
-using System.ComponentModel.DataAnnotations;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
+using SchoolApplication.Services.Contracts.Services;
+using SchoolApplication.Services.Services;
+using SchoolApplication.Web.Exceptions;
+using SchoolApplication.Web.Models.CreateRequestApiModels;
+using SchoolApplication.Web.Models.ResponseModels;
 
-namespace SchoolApplication.Web
+namespace SchoolApplication.Web.Controllers
 {
     /// <summary>
     /// CRUD контроллер по работе с <see cref="ParentModel"/>
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("Api/[controller]")]
     public class ParentController : ControllerBase
     {
         private readonly IParentService parentService;
+        private readonly IValidateService validateService;
         private readonly IMapper mapper;
 
         /// <summary>
         /// ctor
         /// </summary>
-        public ParentController(IParentService parentService, IMapper mapper)
+        public ParentController(IParentService parentService, IValidateService validateService, IMapper mapper)
         {
             this.parentService = parentService;
+            this.validateService = validateService;
             this.mapper = mapper;
+        }
+
+        /// <summary>
+        /// Получает родителя по идентификатору
+        /// </summary>
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ParentApiModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await parentService.GetById(id, cancellationToken);
+
+            return Ok(mapper.Map<ParentApiModel>(result));
         }
 
         /// <summary>
         /// Получает список всех родителей
         /// </summary>
-        /// GET: /api/Parent/
         [HttpGet]
         [ProducesResponseType(typeof(IReadOnlyCollection<ParentApiModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -40,15 +59,14 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Добавляет нового родителя
         /// </summary>
-        /// POST: /api/Parent/
         [HttpPost]
         [ProducesResponseType(typeof(ParentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(ParentRequestApiModel request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(ParentCreateRequestApiModel request, CancellationToken cancellationToken)
         {
-            var requestModel = mapper.Map<ParentCreateModel>(request);
-            var result = await parentService.Create(requestModel, cancellationToken);
+            var requestCreateModel = mapper.Map<ParentCreateModel>(request);
+            await validateService.Validate(requestCreateModel, cancellationToken);
+            var result = await parentService.Create(requestCreateModel, cancellationToken);
 
             return Ok(mapper.Map<ParentApiModel>(result));
         }
@@ -56,18 +74,15 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Редактирует родителя по идентификатору
         /// </summary>
-        /// PUT: /api/Parent/id
         [HttpPut("{id:guid}")]
         [ProducesResponseType(typeof(ParentApiModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] ParentRequestApiModel request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Edit(Guid id, ParentCreateRequestApiModel request, CancellationToken cancellationToken)
         {
-            var requestModel = mapper.Map<ParentModel>(request);
-            requestModel.Id = id;
-
-            var result = await parentService.Edit(requestModel, cancellationToken);
+            var requestCreateModel = mapper.Map<ParentCreateModel>(request);
+            await validateService.Validate(requestCreateModel, cancellationToken);
+            var result = await parentService.Edit(id, requestCreateModel, cancellationToken);
 
             return Ok(mapper.Map<ParentApiModel>(result));
         }
@@ -75,13 +90,10 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Удаляет родителя по идентификатору
         /// </summary>
-        /// DELETE: /api/Parent/id
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ApiValidationExceptionDetail), StatusCodes.Status422UnprocessableEntity)]
-        [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Delete([Required] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             await parentService.Delete(id, cancellationToken);
             return Ok();

@@ -1,6 +1,8 @@
 ﻿using SchoolApplication.Entities;
 using SchoolApplication.Services.Contracts;
-using SchoolApplication.Web;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
+using SchoolApplication.Services.Contracts.Models.Enums;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
 
 namespace SchoolApplication.Tests.Extensions
 {
@@ -22,13 +24,11 @@ namespace SchoolApplication.Tests.Extensions
             {
                 StudentId = student.Id,
                 Student = student,
-                ParentId = parent.Id,
                 Parent = parent,
-                SchoolId = school.Id,
                 School = school,
                 Reason = "по семейным обстоятельствам",
-                DateFrom = new DateTime(2025, 07, 13),
-                DateUntil = new DateTime(2025, 07, 14),
+                DateFrom = DateOnly.FromDateTime(new DateTime(2025, 07, 13)),
+                DateUntil = DateOnly.FromDateTime(new DateTime(2025, 07, 14)),
             };
 
             result.SetBaseAuditData();
@@ -89,7 +89,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.ApplicationCreateModel"/>
+        /// Создает <see cref="Services.Contracts.Models.CreateModels.ApplicationCreateModel"/>
         /// </summary>
         public static ApplicationCreateModel ApplicationCreateModel(Action<ApplicationCreateModel>? settings = null)
         {
@@ -99,8 +99,8 @@ namespace SchoolApplication.Tests.Extensions
                 ParentId = Guid.NewGuid(),
                 SchoolId = Guid.NewGuid(),
                 Reason = "по семейным обстоятельствам",
-                DateFrom = new DateTime(2025, 07, 13),
-                DateUntil = new DateTime(2025, 07, 14),
+                DateFrom = DateOnly.FromDateTime(new DateTime(2025, 07, 13)),
+                DateUntil = DateOnly.FromDateTime(new DateTime(2025, 07, 14)),
             };
 
             settings?.Invoke(result);
@@ -139,7 +139,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.StudentCreateModel"/>
+        /// Создает <see cref="Services.Contracts.Models.CreateModels.StudentCreateModel"/>
         /// </summary>
         public static StudentCreateModel StudentCreateModel(Action<StudentCreateModel>? settings = null)
         {
@@ -157,7 +157,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.ApplicationModel"/>
+        /// Создает <see cref="Services.Contracts.Models.RequestModels.ApplicationModel"/>
         /// </summary>
         public static ApplicationModel ApplicationModel(Action<ApplicationModel>? settings = null)
         {
@@ -167,12 +167,12 @@ namespace SchoolApplication.Tests.Extensions
             var result = new ApplicationModel
             {
                 Id = Guid.NewGuid(),
-                StudentId = student.Id,
-                ParentId = parent.Id,
-                SchoolId = school.Id,
+                Student = student,
+                Parent = parent,
+                School = school,
                 Reason = "по семейным обстоятельствам",
-                DateFrom = new DateTime(2025, 07, 13),
-                DateUntil = new DateTime(2025, 07, 14),
+                DateFrom = DateOnly.FromDateTime(new DateTime(2025, 07, 13)),
+                DateUntil = DateOnly.FromDateTime(new DateTime(2025, 07, 14)),
             };
 
             settings?.Invoke(result);
@@ -180,7 +180,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.ParentModel"/>
+        /// Создает <see cref="Services.Contracts.Models.RequestModels.ParentModel"/>
         /// </summary>
         public static ParentModel ParentModel(Action<ParentModel>? settings = null)
         {
@@ -197,7 +197,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.SchoolModel"/>
+        /// Создает <see cref="Services.Contracts.Models.RequestModels.SchoolModel"/>
         /// </summary>
         public static SchoolModel SchoolModel(Action<SchoolModel>? settings = null)
         {
@@ -213,7 +213,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.ApplicationModel"/>
+        /// Создает <see cref="Services.Contracts.Models.RequestModels.ApplicationModel"/>
         /// </summary>
         public static StudentModel StudentModel(Action<StudentModel>? settings = null)
         {

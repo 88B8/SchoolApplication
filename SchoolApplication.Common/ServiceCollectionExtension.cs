@@ -7,7 +7,7 @@ namespace SchoolApplication.Common
     /// <summary>
     /// Расширения для <see cref="IServiceCollection"/>
     /// </summary>
-    public static class ServiceCollectionExstension
+    public static class ServiceCollectionExtension
     {
         /// <summary>
         /// Регистрация с помощью маркерных интерфейсов
@@ -15,18 +15,18 @@ namespace SchoolApplication.Common
         public static void RegistrationOnInterface<TInterface>(this IServiceCollection serviceDescriptors,
             ServiceLifetime lifetime)
         {
-            var servicetype = typeof(TInterface);
-            var allTypes = servicetype.Assembly.GetTypes()
-                .Where(x => servicetype.IsAssignableFrom(x)
+            var serviceType = typeof(TInterface);
+            var allTypes = serviceType.Assembly.GetTypes()
+                .Where(x => serviceType.IsAssignableFrom(x)
                 && !(x.IsInterface || x.IsAbstract));
 
             foreach (var type in allTypes)
             {
                 serviceDescriptors.TryAdd(new ServiceDescriptor(type, type, lifetime));
                 var interfaces = type.GetTypeInfo().ImplementedInterfaces
-                    .Where(x => x != typeof(IDisposable) && x.IsPublic && x != servicetype);
+                    .Where(x => x != typeof(IDisposable) && x.IsPublic && x != serviceType);
 
-                foreach (Type interfaceType in interfaces)
+                foreach (var interfaceType in interfaces)
                 {
                     serviceDescriptors.TryAdd(new ServiceDescriptor(interfaceType, provider =>
                     provider.GetRequiredService(type), lifetime));

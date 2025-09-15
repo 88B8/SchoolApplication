@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace SchoolApplication.Web.Tests
+namespace SchoolApplication.Web.Tests.Client
 {
     /// <summary>
     /// 

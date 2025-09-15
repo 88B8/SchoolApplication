@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SchoolApplication.Entities.Contracts\SchoolApplication.Entities.Contracts.csproj" />
     <ProjectReference Include="..\SchoolApplication.Context.Contracts\SchoolApplication.Context.Contracts.csproj" />
   </ItemGroup>
 

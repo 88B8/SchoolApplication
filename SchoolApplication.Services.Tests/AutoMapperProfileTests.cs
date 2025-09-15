@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SchoolApplication.Services.Infrastructure;
 
 namespace SchoolApplication.Services.Tests
 {

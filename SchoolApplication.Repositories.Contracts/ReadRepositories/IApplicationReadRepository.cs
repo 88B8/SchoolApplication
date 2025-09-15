@@ -1,6 +1,7 @@
 ﻿using SchoolApplication.Entities;
+using SchoolApplication.Repositories.Contracts.Models;
 
-namespace SchoolApplication.Repositories.Contracts
+namespace SchoolApplication.Repositories.Contracts.ReadRepositories
 {
     /// <summary>
     /// Репозиторий чтения сущности <see cref="Application"/>
@@ -10,11 +11,11 @@ namespace SchoolApplication.Repositories.Contracts
         /// <summary>
         /// Получает <see cref="Application"/> по идентификатору
         /// </summary>
-        Task<Application?> GetById(Guid id, CancellationToken cancellationToken);
+        Task<ApplicationDbModel?> GetById(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Получает коллекцию всех <see cref="Application"/>
         /// </summary>
-        Task<IReadOnlyCollection<Application>> GetAll(CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<ApplicationDbModel>> GetAll(CancellationToken cancellationToken);
     }
 }

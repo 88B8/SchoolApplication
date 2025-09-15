@@ -1,6 +1,6 @@
-﻿using SchoolApplication.Services.Contracts;
+﻿using SchoolApplication.Services.Contracts.Exceptions;
 
-namespace SchoolApplication.Web
+namespace SchoolApplication.Web.Exceptions
 {
     /// <summary>
     /// Информация об ошибках валидации работы API
@@ -10,6 +10,6 @@ namespace SchoolApplication.Web
         /// <summary>
         /// Ошибки валидации
         /// </summary>
-        public IEnumerable<InvalidateItemModel> Errors { get; set; } = Array.Empty<InvalidateItemModel>();
+        public IEnumerable<InvalidateItemModel> Errors { get; set; } = [];
     }
 }

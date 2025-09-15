@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Context.Tests;
-using SchoolApplication.Repositories.Contracts;
+using SchoolApplication.Repositories.Contracts.ReadRepositories;
+using SchoolApplication.Repositories.ReadRepositories;
 using SchoolApplication.Tests.Extensions;
 
 namespace SchoolApplication.Repositories.Tests
@@ -28,6 +29,9 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var id = Guid.NewGuid();
+            var school = TestDataGenerator.School();
+            Context.Add(school);
+            await UnitOfWork.SaveChangesAsync();
 
             // Act
             var result = await schoolReadRepository.GetById(id, CancellationToken.None);
@@ -44,7 +48,7 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var school = TestDataGenerator.School(x => x.DeletedAt = DateTimeOffset.UtcNow);
-            await Context.AddAsync(school);
+            Context.Add(school);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -62,7 +66,7 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var school = TestDataGenerator.School();
-            await Context.AddAsync(school);
+            Context.Add(school);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -80,6 +84,11 @@ namespace SchoolApplication.Repositories.Tests
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            var school = TestDataGenerator.School(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.Add(school);
+            await UnitOfWork.SaveChangesAsync();
+
             // Act
             var result = await schoolReadRepository.GetAll(CancellationToken.None);
 
@@ -95,14 +104,17 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var school = TestDataGenerator.School();
-            await Context.AddAsync(school);
+            var deletedSchool = TestDataGenerator.School(x => x.DeletedAt = DateTimeOffset.UtcNow);
+
+            Context.AddRange(school, deletedSchool);
             await Context.SaveChangesAsync();
 
             // Act
             var result = await schoolReadRepository.GetAll(CancellationToken.None);
 
             // Assert
-            result.Should().NotBeEmpty();
+            result.Should().ContainSingle()
+                .Which.Should().BeEquivalentTo(school);
         }
     }
 }

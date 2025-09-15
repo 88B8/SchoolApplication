@@ -1,26 +1,13 @@
-﻿namespace SchoolApplication.Services.Contracts
+﻿namespace SchoolApplication.Services.Contracts.Models.RequestModels
 {
     /// <summary>
     /// Модель школы
     /// </summary>
-    public class SchoolModel
+    public class SchoolModel : SchoolCreateModel
     {
         /// <summary>
         /// Идентификатор
         /// </summary>
-        [ExcelHeader("Идентификатор", 1)]
         public Guid Id { get; set; }
-
-        /// <summary>
-        /// Название школы
-        /// </summary>
-        [ExcelHeader("Название", 2)]
-        public string Name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Имя директора школы
-        /// </summary>
-        [ExcelHeader("Имя директора", 3)]
-        public string DirectorName { get; set; } = string.Empty;
     }
 }

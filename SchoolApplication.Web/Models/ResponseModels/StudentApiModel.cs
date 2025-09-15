@@ -1,4 +1,6 @@
-﻿namespace SchoolApplication.Web
+﻿using SchoolApplication.Web.Models.Enums;
+
+namespace SchoolApplication.Web.Models.ResponseModels
 {
     /// <summary>
     /// API модель ученика

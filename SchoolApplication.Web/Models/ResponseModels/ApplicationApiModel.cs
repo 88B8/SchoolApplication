@@ -1,4 +1,4 @@
-﻿namespace SchoolApplication.Web
+﻿namespace SchoolApplication.Web.Models.ResponseModels
 {
     /// <summary>
     /// API модель заявления
@@ -6,24 +6,24 @@
     public class ApplicationApiModel
     {
         /// <summary>
-        /// Идентификтатор
+        /// Идентификатор
         /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Идентификатор ученика
+        /// Навигационное свойство ученика
         /// </summary>
-        public Guid StudentId { get; set; }
+        public StudentApiModel Student { get; set; } = new StudentApiModel();
 
         /// <summary>
-        /// Идентификатор родителя
+        /// Навигационное свойство родителя
         /// </summary>
-        public Guid ParentId { get; set; }
+        public ParentApiModel Parent { get; set; } = new ParentApiModel();
 
         /// <summary>
-        /// Идентификатор школы
+        /// Навигационное свойство школы
         /// </summary>
-        public Guid SchoolId { get; set; }
+        public SchoolApiModel School { get; set; } = new SchoolApiModel();
 
         /// <summary>
         /// Причина заявления
@@ -33,11 +33,11 @@
         /// <summary>
         /// Дата, с которой ученик отсутствует
         /// </summary>
-        public DateTime DateFrom { get; set; }
+        public DateOnly DateFrom { get; set; }
 
         /// <summary>
         /// Дата, по которую ученик отсутствует
         /// </summary>
-        public DateTime DateUntil { get; set; }
+        public DateOnly DateUntil { get; set; }
     }
 }

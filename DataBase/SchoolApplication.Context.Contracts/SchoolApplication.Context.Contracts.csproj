@@ -11,7 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\SchoolApplication.Common\SchoolApplication.Common.csproj" />
+	  <ProjectReference Include="..\..\SchoolApplication.Common.Contracts\SchoolApplication.Common.Contracts.csproj" />
+	  <ProjectReference Include="..\..\SchoolApplication.Entities.Contracts\SchoolApplication.Entities.Contracts.csproj" />
 	</ItemGroup>
 	
 </Project>

@@ -2,16 +2,16 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using SchoolApplication.Entities;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Services.Contracts.Services;
 
-namespace SchoolApplication.Services
+namespace SchoolApplication.Services.Services
 {
     /// <inheritdoc cref="IExcelService"/>
     public class ExcelService : IExcelService, IServiceAnchor
     {
-        byte[] IExcelService.Export(Application application, CancellationToken cancellationToken)
+        Stream IExcelService.Export(Application application, CancellationToken cancellationToken)
         {
-            using var stream = new MemoryStream();
+            var stream = new MemoryStream();
 
             using (var spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook))
             {
@@ -22,7 +22,7 @@ namespace SchoolApplication.Services
                 var sheetData = new SheetData();
                 worksheetPart.Worksheet = new Worksheet(sheetData);
 
-                var sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild(new Sheets());
+                var sheets = spreadsheetDocument.WorkbookPart!.Workbook.AppendChild(new Sheets());
                 sheets.Append(new Sheet()
                 {
                     Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
@@ -40,12 +40,13 @@ namespace SchoolApplication.Services
                 AddRow(sheetData, rowIndex++, "");
                 AddRow(sheetData, rowIndex++, $"Прошу Вас разрешить отсутствовать на учебных занятиях в школе с {application.DateFrom:dd.MM.yyyy}");
                 AddRow(sheetData, rowIndex++, $"по {application.DateUntil:dd.MM.yyyy} моему {(application.Student.Gender == 0 ? "сыну" : "дочери")} {application.Student.Surname} {application.Student.Name} {application.Student.Patronymic}");
-                AddRow(sheetData, rowIndex++, $"{(application.Student.Gender == 0 ? "ученика" : "ученицы")} {application.Student.Grade} класса {application.Reason}");
+                AddRow(sheetData, rowIndex, $"{(application.Student.Gender == 0 ? "ученика" : "ученицы")} {application.Student.Grade} класса {application.Reason}");
 
                 workbookPart.Workbook.Save();
             }
 
-            return stream.ToArray();
+            stream.Position = 0;
+            return stream;
         }
 
         private void AddRow(SheetData sheetData, uint rowIndex, params string[] values)

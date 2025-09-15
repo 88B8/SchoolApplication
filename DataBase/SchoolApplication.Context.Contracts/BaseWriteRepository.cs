@@ -1,4 +1,5 @@
-﻿using SchoolApplication.Common;
+﻿using SchoolApplication.Common.Contracts;
+using SchoolApplication.Entities.Contracts;
 using System.Diagnostics.CodeAnalysis;
 
 namespace SchoolApplication.Context.Contracts

@@ -11,9 +11,9 @@
         public Guid StudentId { get; set; }
 
         /// <summary>
-        /// Навигационное свойство
+        /// Навигационное свойство ученика
         /// </summary>
-        public Student Student { get; set; }
+        public Student Student { get; set; } = null!;
 
         /// <summary>
         /// Идентификатор родителя
@@ -21,9 +21,9 @@
         public Guid ParentId { get; set; }
 
         /// <summary>
-        /// Навигационное свойство
+        /// Навигационное свойство родителя
         /// </summary>
-        public Parent Parent { get; set; }
+        public Parent Parent { get; set; } = null!;
 
         /// <summary>
         /// Идентификатор школы
@@ -31,9 +31,9 @@
         public Guid SchoolId { get; set; }
 
         /// <summary>
-        /// Навигационное свойство
+        /// Навигационное свойство школы
         /// </summary>
-        public School School { get; set; }
+        public School School { get; set; } = null!;
 
         /// <summary>
         /// Причина заявления
@@ -43,11 +43,11 @@
         /// <summary>
         /// Дата, с которой ученик отсутствует
         /// </summary>
-        public DateTime DateFrom { get; set; }
+        public DateOnly DateFrom { get; set; }
 
         /// <summary>
         /// Дата, по которую ученик отсутствует
         /// </summary>
-        public DateTime DateUntil { get; set; }
+        public DateOnly DateUntil { get; set; }
     }
 }

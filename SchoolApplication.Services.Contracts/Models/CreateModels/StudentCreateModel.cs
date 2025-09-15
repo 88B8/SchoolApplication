@@ -1,4 +1,6 @@
-﻿namespace SchoolApplication.Services.Contracts
+﻿using SchoolApplication.Services.Contracts.Models.Enums;
+
+namespace SchoolApplication.Services.Contracts.Models.CreateModels
 {
     /// <summary>
     /// Модель создания ученика

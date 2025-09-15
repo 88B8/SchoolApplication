@@ -1,6 +1,9 @@
-﻿using FluentAssertions;
+﻿using AutoMapper.Configuration.Annotations;
+using FluentAssertions;
 using SchoolApplication.Context.Tests;
-using SchoolApplication.Repositories.Contracts;
+using SchoolApplication.Repositories.Contracts.Models;
+using SchoolApplication.Repositories.Contracts.ReadRepositories;
+using SchoolApplication.Repositories.ReadRepositories;
 using SchoolApplication.Tests.Extensions;
 
 namespace SchoolApplication.Repositories.Tests
@@ -28,6 +31,10 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var id = Guid.NewGuid();
+            var application = TestDataGenerator.Application();
+            
+            Context.Add(application);
+            await UnitOfWork.SaveChangesAsync();
 
             // Act
             var result = await applicationReadRepository.GetById(id, CancellationToken.None);
@@ -44,7 +51,7 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var application = TestDataGenerator.Application(x => x.DeletedAt = DateTimeOffset.UtcNow);
-            await Context.AddAsync(application);
+            Context.Add(application);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -62,7 +69,17 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var application = TestDataGenerator.Application();
-            await Context.AddAsync(application);
+            var applicationDbModel = new ApplicationDbModel
+            {
+                Id = application.Id,
+                DateFrom = application.DateFrom,
+                DateUntil = application.DateUntil,
+                Parent = application.Parent,
+                Reason = application.Reason,
+                School = application.School,
+                Student = application.Student,
+            };
+            Context.Add(application);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -70,9 +87,7 @@ namespace SchoolApplication.Repositories.Tests
 
             // Assert
             result.Should()
-                .NotBeNull()
-                .And.BeEquivalentTo(application, opt => opt
-                .Excluding(x => x.Student));
+                .BeEquivalentTo(applicationDbModel);
         }
 
         /// <summary>
@@ -81,6 +96,9 @@ namespace SchoolApplication.Repositories.Tests
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            var application = TestDataGenerator.Application(x => x.DeletedAt = DateTimeOffset.UtcNow);
+
             // Act
             var result = await applicationReadRepository.GetAll(CancellationToken.None);
 
@@ -96,14 +114,29 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var application = TestDataGenerator.Application();
-            await Context.AddAsync(application);
+            var deletedApplication = TestDataGenerator.Application(x => x.DeletedAt = DateTime.Now);
+            var applicationDbModel = new ApplicationDbModel
+            {
+                Id = application.Id,
+                DateFrom = application.DateFrom,
+                DateUntil = application.DateUntil,
+                Parent = application.Parent,
+                Reason = application.Reason,
+                School = application.School,
+                Student = application.Student,
+            };
+
+            Context.AddRange(application, deletedApplication);
             await Context.SaveChangesAsync();
 
             // Act
             var result = await applicationReadRepository.GetAll(CancellationToken.None);
 
             // Assert
-            result.Should().NotBeEmpty();
+            result.Should()
+                .ContainSingle()
+                .Which.Should()
+                .BeEquivalentTo(applicationDbModel);
         }
     }
 }

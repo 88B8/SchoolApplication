@@ -1,5 +1,7 @@
 ﻿using FluentValidation.TestHelper;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Entities.Contracts.ValidationRules;
+using SchoolApplication.Services.Validators.CreateModels;
+using SchoolApplication.Tests.Extensions;
 
 namespace SchoolApplication.Services.Tests.Validators
 {
@@ -17,12 +19,7 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldPassWhenModelIsValid()
         {
             // Arrange
-            var model = new ParentCreateModel
-            {
-                Surname = "Иванов",
-                Name = "Иван",
-                Patronymic = "Иванович",
-            };
+            var model = TestDataGenerator.ParentCreateModel();
 
             // Act
             var result = validator.TestValidate(model);
@@ -38,11 +35,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenSurnameIsEmpty()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Name = "Иван",
-                Patronymic = "Иванович",
-            };
+                x.Surname = string.Empty;
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -58,11 +54,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenNameIsEmpty()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = "Иванов",
-                Patronymic = "Иванович",
-            };
+                x.Name = string.Empty;
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -78,11 +73,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenPatronymicIsEmpty()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = "Иванов",
-                Name = "Иван",
-            };
+                x.Patronymic = string.Empty;
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -98,12 +92,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenSurnameTooShort()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = "И",
-                Name = "Иван",
-                Patronymic = "Иванович",
-            };
+                x.Surname = new string('a', ParentValidationRules.SurnameMinLength - 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -119,12 +111,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenSurnameTooLong()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = new string('a', 256),
-                Name = "Иван",
-                Patronymic = "Иванович",
-            };
+                x.Surname = new string('a', ParentValidationRules.SurnameMaxLength + 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -140,12 +130,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenNameTooShort()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = "Иванов",
-                Name = "И",
-                Patronymic = "Иванович",
-            };
+                x.Name = new string('a', ParentValidationRules.NameMinLength - 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -161,12 +149,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenNameTooLong()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = "Иванов",
-                Name = new string('a', 256),
-                Patronymic = "Иванович",
-            };
+                x.Name = new string('a', ParentValidationRules.NameMaxLength + 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -182,12 +168,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenPatronymicTooShort()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = "Иванов",
-                Name = "Иван",
-                Patronymic = "И",
-            };
+                x.Patronymic = new string('a', ParentValidationRules.PatronymicMinLength - 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);
@@ -203,12 +187,10 @@ namespace SchoolApplication.Services.Tests.Validators
         public void ValidatorShouldErrorWhenPatronymicTooLong()
         {
             // Arrange
-            var model = new ParentCreateModel
+            var model = TestDataGenerator.ParentCreateModel(x =>
             {
-                Surname = "Иванов",
-                Name = "Иван",
-                Patronymic = new string('a', 256),
-            };
+                x.Patronymic = new string('a', ParentValidationRules.PatronymicMaxLength + 1);
+            });
 
             // Act
             var result = validator.TestValidate(model);

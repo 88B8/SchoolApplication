@@ -1,4 +1,4 @@
-﻿namespace SchoolApplication.Services.Contracts
+﻿namespace SchoolApplication.Services.Contracts.Services
 {
     /// <summary>
     /// Сервис валидации

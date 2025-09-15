@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SchoolApplication.Context;
+using SchoolApplication.Web.Tests.Client;
 
-namespace SchoolApplication.Web.Tests
+namespace SchoolApplication.Web.Tests.Infrastructure
 {
     /// <summary>
     /// Фикстура
@@ -45,14 +46,11 @@ namespace SchoolApplication.Web.Tests
         }
 
         /// <summary>
-        /// 
+        /// Применяет все миграции
         /// </summary>
         public Task InitializeAsync() => Context.Database.MigrateAsync();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public async Task DisposeAsync()
+        async Task IAsyncLifetime.DisposeAsync()
         {
             await Context.Database.EnsureDeletedAsync();
             await Context.Database.CloseConnectionAsync();

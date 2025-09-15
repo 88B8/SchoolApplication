@@ -1,16 +1,15 @@
-﻿using FluentValidation;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using FluentValidation;
+using SchoolApplication.Entities.Contracts.ValidationRules;
 using SchoolApplication.Services.Contracts;
 
-namespace SchoolApplication.Services
+namespace SchoolApplication.Services.Validators.CreateModels
 {
     /// <summary>
     /// Валидация <see cref="ParentCreateModel"/>
     /// </summary>
     public class ParentCreateModelValidator : AbstractValidator<ParentCreateModel>
     {
-        private const int MinLength = 2;
-        private const int MaxLength = 255;
-
         /// <summary>
         /// ctor
         /// </summary>
@@ -18,15 +17,18 @@ namespace SchoolApplication.Services
         {
             RuleFor(x => x.Surname)
                 .NotEmpty().WithMessage("Фамилия обязательна")
-                .Length(MinLength, MaxLength).WithMessage($"Фамилия должна содержать от {MinLength} до {MaxLength} символов");
+                .Length(ParentValidationRules.SurnameMinLength, ParentValidationRules.SurnameMaxLength)
+                .WithMessage($"Фамилия должна содержать от {ParentValidationRules.SurnameMinLength} до {ParentValidationRules.SurnameMaxLength} символов");
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Имя обязательно")
-                .Length(MinLength, MaxLength).WithMessage($"Имя должно содержать от {MinLength} до {MaxLength} символов");
+                .Length(ParentValidationRules.NameMinLength, ParentValidationRules.NameMaxLength)
+                .WithMessage($"Имя должно содержать от {ParentValidationRules.NameMinLength} до {ParentValidationRules.NameMaxLength} символов");
 
             RuleFor(x => x.Patronymic)
                 .NotEmpty().WithMessage("Отчество обязательно")
-                .Length(MinLength, MaxLength).WithMessage($"Отчество должно содержать от {MinLength} до {MaxLength} символов");
+                .Length(ParentValidationRules.PatronymicMinLength, ParentValidationRules.PatronymicMaxLength)
+                .WithMessage($"Отчество должно содержать от {ParentValidationRules.PatronymicMinLength} до {ParentValidationRules.PatronymicMaxLength} символов");
         }
     }
 }

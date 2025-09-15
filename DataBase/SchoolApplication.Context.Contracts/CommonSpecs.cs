@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
+using SchoolApplication.Entities.Contracts;
 
 namespace SchoolApplication.Context.Contracts
 {
     /// <summary>
-    /// Общие спецификации чтения
+    /// Общие спецификации
     /// </summary>
     public static class CommonSpecs
     {
@@ -23,7 +24,7 @@ namespace SchoolApplication.Context.Contracts
             => query.Where(x => x.Id == id);
 
         /// <summary>
-        /// Возвращает <see cref="IReadOnlyCollection{TEntity}"
+        /// Возвращает <see cref="IReadOnlyCollection{TEntity}"/>
         /// </summary>
         public static Task<IReadOnlyCollection<TEntity>> ToReadOnlyCollectionAsync<TEntity>(this IQueryable<TEntity> query,
             CancellationToken cancellationToken)

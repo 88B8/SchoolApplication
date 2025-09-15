@@ -1,4 +1,4 @@
-﻿using SchoolApplication.Context.Contracts;
+﻿using SchoolApplication.Entities.Contracts;
 
 namespace SchoolApplication.Entities
 {

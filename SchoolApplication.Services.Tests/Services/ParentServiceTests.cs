@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
 using Moq;
 using FluentAssertions;
-using SchoolApplication.Common;
+using SchoolApplication.Common.Contracts;
 using SchoolApplication.Context.Tests;
-using SchoolApplication.Repositories;
+using SchoolApplication.Repositories.ReadRepositories;
+using SchoolApplication.Repositories.WriteRepositories;
 using SchoolApplication.Tests.Extensions;
 using SchoolApplication.Entities;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Services.Contracts.Exceptions;
+using SchoolApplication.Services.Services;
+using SchoolApplication.Services.Infrastructure;
+using SchoolApplication.Services.Contracts.Services;
 
 namespace SchoolApplication.Services.Tests.Services
 {
@@ -29,7 +33,6 @@ namespace SchoolApplication.Services.Tests.Services
 
             var mapper = config.CreateMapper();
             parentService = new ParentService(new ParentReadRepository(Context),
-                new ValidateService(),
                 new ParentWriteRepository(Context, Mock.Of<IDateTimeProvider>()),
                 UnitOfWork,
                 mapper);
@@ -72,6 +75,43 @@ namespace SchoolApplication.Services.Tests.Services
         }
 
         /// <summary>
+        /// Тест на получение сущности по идентификатору
+        /// </summary>
+        [Fact]
+        public async Task GetByIdShouldReturnValue()
+        {
+            // Arrange
+            var parent = TestDataGenerator.Parent();
+            Context.Add(parent);
+            await UnitOfWork.SaveChangesAsync();
+
+            // Act
+            var result = await parentService.GetById(parent.Id, CancellationToken.None);
+
+            // Assert
+            result.Should().BeEquivalentTo(parent, opt => opt
+                .Excluding(x => x.CreatedAt)
+                .Excluding(x => x.UpdatedAt)
+                .Excluding(x => x.DeletedAt));
+        }
+
+        /// <summary>
+        /// Тест на исключение при ненайденной сущности
+        /// </summary>
+        [Fact]
+        public async Task GetByIdShouldThrowNotFound()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+
+            // Act
+            var result = () => parentService.GetById(id, CancellationToken.None);
+
+            // Assert
+            await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();
+        }
+
+        /// <summary>
         /// Тест на добавление <see cref="Parent"/>
         /// </summary>
         [Fact]
@@ -90,22 +130,6 @@ namespace SchoolApplication.Services.Tests.Services
         }
 
         /// <summary>
-        /// Тест на добавление невалидной <see cref="Parent"/>
-        /// </summary>
-        [Fact]
-        public async Task CreateShouldThrowValidationException()
-        {
-            // Arrange
-            var model = TestDataGenerator.ParentCreateModel(x => x.Name = "a");
-
-            // Act
-            Func<Task> result = () => parentService.Create(model, CancellationToken.None);
-
-            // Assert
-            await result.Should().ThrowAsync<SchoolApplicationValidationException>();
-        }
-
-        /// <summary>
         /// Тест на редактирование <see cref="Parent"/>
         /// </summary>
         [Fact]
@@ -119,7 +143,7 @@ namespace SchoolApplication.Services.Tests.Services
                 x.Name = "Иван";
             });
 
-            await Context.AddAsync(application);
+            Context.Add(application);
             await UnitOfWork.SaveChangesAsync();
 
             var updatedModel = TestDataGenerator.ParentModel(x =>
@@ -129,7 +153,7 @@ namespace SchoolApplication.Services.Tests.Services
             });
 
             // Act
-            await parentService.Edit(updatedModel, CancellationToken.None);
+            await parentService.Edit(id, updatedModel, CancellationToken.None);
 
             // Assert
             var updated = await Context.Set<Parent>().FindAsync(id);
@@ -147,26 +171,10 @@ namespace SchoolApplication.Services.Tests.Services
             var model = TestDataGenerator.ParentModel();
 
             // Act
-            Func<Task> result = () => parentService.Edit(model, CancellationToken.None);
+            var result = () => parentService.Edit(model.Id, model, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();
-        }
-
-        /// <summary>
-        /// Тест на редактирование невалидного <see cref="Parent"/>
-        /// </summary>
-        [Fact]
-        public async Task EditShouldThrowValidationException()
-        {
-            // Arrange
-            var model = TestDataGenerator.ParentModel(x => x.Name = "1");
-
-            // Act
-            Func<Task> result = () => parentService.Edit(model, CancellationToken.None);
-
-            // Assert
-            await result.Should().ThrowAsync<SchoolApplicationValidationException>();
         }
 
         /// <summary>
@@ -177,11 +185,11 @@ namespace SchoolApplication.Services.Tests.Services
         {
             // Arrange
             var model = TestDataGenerator.Parent();
-            await Context.AddAsync(model);
+            Context.Add(model);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
-            Func<Task> result = () => parentService.Delete(model.Id, CancellationToken.None);
+            var result = () => parentService.Delete(model.Id, CancellationToken.None);
 
             // Assert
             await result.Should().NotThrowAsync();
@@ -200,7 +208,7 @@ namespace SchoolApplication.Services.Tests.Services
             var id = Guid.NewGuid();
 
             // Act
-            Func<Task> result = () => parentService.Delete(id, CancellationToken.None);
+            var result = () => parentService.Delete(id, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();
@@ -214,11 +222,11 @@ namespace SchoolApplication.Services.Tests.Services
         {
             // Arrange
             var model = TestDataGenerator.Parent(x => x.DeletedAt = DateTime.UtcNow);
-            await Context.AddAsync(model);
+            Context.Add(model);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
-            Func<Task> result = () => parentService.Delete(model.Id, CancellationToken.None);
+            var result = () => parentService.Delete(model.Id, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();

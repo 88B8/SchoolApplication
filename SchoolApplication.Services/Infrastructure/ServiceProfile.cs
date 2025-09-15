@@ -1,57 +1,38 @@
 ﻿using AutoMapper;
 using AutoMapper.Extensions.EnumMapping;
 using SchoolApplication.Entities;
+using SchoolApplication.Repositories.Contracts.Models;
 using SchoolApplication.Services.Contracts;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
+using SchoolApplication.Services.Contracts.Models.Enums;
+using SchoolApplication.Services.Contracts.Models.RequestModels;
 
-namespace SchoolApplication.Services
+namespace SchoolApplication.Services.Infrastructure
 {
+    /// <summary>
+    /// Сервисный маппер
+    /// </summary>
     public class ServiceProfile : Profile
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
         public ServiceProfile()
         {
             CreateMap<Gender, GenderModel>().ConvertUsingEnumMapping(opt => opt.MapByName()).ReverseMap();
 
-            CreateMap<Application, ApplicationModel>(MemberList.Destination).ReverseMap();
-            CreateMap<Parent, ParentModel>(MemberList.Destination).ReverseMap();
-            CreateMap<School, SchoolModel>(MemberList.Destination).ReverseMap();
-            CreateMap<Student, StudentModel>(MemberList.Destination).ReverseMap();
+            CreateMap<Application, ApplicationModel>(MemberList.Destination);
+            CreateMap<Parent, ParentModel>(MemberList.Destination);
+            CreateMap<School, SchoolModel>(MemberList.Destination);
+            CreateMap<Student, StudentModel>(MemberList.Destination);
 
-            CreateMap<ApplicationCreateModel, Application>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.Student, opt => opt.Ignore())
-                .ForMember(x => x.Parent, opt => opt.Ignore())
-                .ForMember(x => x.School, opt => opt.Ignore())
-                .ForMember(x => x.CreatedAt, opt => opt.Ignore())
-                .ForMember(x => x.UpdatedAt, opt => opt.Ignore())
-                .ForMember(x => x.DeletedAt, opt => opt.Ignore());
-            CreateMap<ParentCreateModel, Parent>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.CreatedAt, opt => opt.Ignore())
-                .ForMember(x => x.UpdatedAt, opt => opt.Ignore())
-                .ForMember(x => x.DeletedAt, opt => opt.Ignore());
-            CreateMap<SchoolCreateModel, School>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.CreatedAt, opt => opt.Ignore())
-                .ForMember(x => x.UpdatedAt, opt => opt.Ignore())
-                .ForMember(x => x.DeletedAt, opt => opt.Ignore());
-            CreateMap<StudentCreateModel, Student>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ForMember(x => x.CreatedAt, opt => opt.Ignore())
-                .ForMember(x => x.UpdatedAt, opt => opt.Ignore())
-                .ForMember(x => x.DeletedAt, opt => opt.Ignore());
+            CreateMap<ApplicationCreateModel, Application>(MemberList.Source);
+            CreateMap<ParentCreateModel, Parent>(MemberList.Source);
+            CreateMap<SchoolCreateModel, School>(MemberList.Source);
+            CreateMap<StudentCreateModel, Student>(MemberList.Source);
 
-            CreateMap<ApplicationCreateModel, ApplicationModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ReverseMap();
-            CreateMap<ParentCreateModel, ParentModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ReverseMap();
-            CreateMap<SchoolCreateModel, SchoolModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ReverseMap();
-            CreateMap<StudentCreateModel, StudentModel>(MemberList.Destination)
-                .ForMember(x => x.Id, opt => opt.Ignore())
-                .ReverseMap();
+            CreateMap<ApplicationDbModel, Application>(MemberList.Source).ReverseMap();
+            CreateMap<ApplicationDbModel, ApplicationModel>(MemberList.Source).ReverseMap();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SchoolApplication.Entities.Contracts.ValidationRules;
 
 namespace SchoolApplication.Entities.Configurations
 {
@@ -13,10 +14,25 @@ namespace SchoolApplication.Entities.Configurations
             builder.ToTable("Students");
 
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).IsRequired();
-            builder.Property(x => x.Name).HasMaxLength(255).IsRequired();
-            builder.Property(x => x.Gender).IsRequired();
-            builder.Property(x => x.Grade).IsRequired().HasMaxLength(5);
+
+            builder.Property(x => x.Surname)
+                .HasMaxLength(StudentValidationRules.SurnameMaxLength)
+                .IsRequired();
+
+            builder.Property(x => x.Name)
+                .HasMaxLength(StudentValidationRules.NameMaxLength)
+                .IsRequired();
+
+            builder.Property(x => x.Name)
+                .HasMaxLength(StudentValidationRules.PatronymicMaxLength)
+                .IsRequired();
+
+            builder.Property(x => x.Gender)
+                .IsRequired();
+
+            builder.Property(x => x.Grade)
+                .HasMaxLength(StudentValidationRules.GradeMaxLength)
+                .IsRequired();
         }
     }
 }

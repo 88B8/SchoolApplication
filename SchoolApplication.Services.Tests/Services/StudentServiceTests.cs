@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
 using Moq;
 using FluentAssertions;
-using SchoolApplication.Common;
+using SchoolApplication.Common.Contracts;
 using SchoolApplication.Context.Tests;
-using SchoolApplication.Repositories;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Repositories.ReadRepositories;
+using SchoolApplication.Repositories.WriteRepositories;
 using SchoolApplication.Tests.Extensions;
 using SchoolApplication.Entities;
+using SchoolApplication.Services.Contracts.Exceptions;
+using SchoolApplication.Services.Services;
+using SchoolApplication.Services.Infrastructure;
+using SchoolApplication.Services.Contracts.Services;
 
 namespace SchoolApplication.Services.Tests.Services
 {
@@ -29,8 +33,9 @@ namespace SchoolApplication.Services.Tests.Services
 
             var mapper = config.CreateMapper();
             studentService = new StudentService(new StudentReadRepository(Context),
-                new ValidateService(),
+                new ApplicationReadRepository(Context),
                 new StudentWriteRepository(Context, Mock.Of<IDateTimeProvider>()),
+                new ApplicationWriteRepository(Context, Mock.Of<IDateTimeProvider>()),
                 UnitOfWork,
                 mapper);
         }
@@ -72,6 +77,43 @@ namespace SchoolApplication.Services.Tests.Services
         }
 
         /// <summary>
+        /// Тест на получение правильной сущности по идентификатору
+        /// </summary>
+        [Fact]
+        public async Task GetByIdShouldReturnValue()
+        {
+            // Arrange
+            var student = TestDataGenerator.Student();
+            Context.Add(student);
+            await UnitOfWork.SaveChangesAsync();
+
+            // Act
+            var result = await studentService.GetById(student.Id, CancellationToken.None);
+
+            // Assert
+            result.Should().BeEquivalentTo(student, opt => opt
+                .Excluding(x => x.CreatedAt)
+                .Excluding(x => x.UpdatedAt)
+                .Excluding(x => x.DeletedAt));
+        }
+
+        /// <summary>
+        /// Тест на исключение при ненайденной сущности
+        /// </summary>
+        [Fact]
+        public async Task GetByIdShouldThrowNotFound()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+
+            // Act
+            var result = () => studentService.GetById(id, CancellationToken.None);
+
+            // Assert
+            await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();
+        }
+
+        /// <summary>
         /// Тест на добавление <see cref="Student"/>
         /// </summary>
         [Fact]
@@ -90,22 +132,6 @@ namespace SchoolApplication.Services.Tests.Services
         }
 
         /// <summary>
-        /// Тест на добавление невалидной <see cref="Student"/>
-        /// </summary>
-        [Fact]
-        public async Task CreateShouldThrowValidationException()
-        {
-            // Arrange
-            var model = TestDataGenerator.StudentCreateModel(x => x.Name = "a");
-
-            // Act
-            Func<Task> result = () => studentService.Create(model, CancellationToken.None);
-
-            // Assert
-            await result.Should().ThrowAsync<SchoolApplicationValidationException>();
-        }
-
-        /// <summary>
         /// Тест на редактирование <see cref="Student"/>
         /// </summary>
         [Fact]
@@ -119,7 +145,7 @@ namespace SchoolApplication.Services.Tests.Services
                 x.Name = "Иван";
             });
 
-            await Context.AddAsync(application);
+            Context.Add(application);
             await UnitOfWork.SaveChangesAsync();
 
             var updatedModel = TestDataGenerator.StudentModel(x =>
@@ -129,7 +155,7 @@ namespace SchoolApplication.Services.Tests.Services
             });
 
             // Act
-            await studentService.Edit(updatedModel, CancellationToken.None);
+            await studentService.Edit(id, updatedModel, CancellationToken.None);
 
             // Assert
             var updated = await Context.Set<Student>().FindAsync(id);
@@ -147,26 +173,10 @@ namespace SchoolApplication.Services.Tests.Services
             var model = TestDataGenerator.StudentModel();
 
             // Act
-            Func<Task> result = () => studentService.Edit(model, CancellationToken.None);
+            var result = () => studentService.Edit(model.Id, model, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();
-        }
-
-        /// <summary>
-        /// Тест на редактирование невалидного <see cref="Student"/>
-        /// </summary>
-        [Fact]
-        public async Task EditShouldThrowValidationException()
-        {
-            // Arrange
-            var model = TestDataGenerator.StudentModel(x => x.Name = "1");
-
-            // Act
-            Func<Task> result = () => studentService.Edit(model, CancellationToken.None);
-
-            // Assert
-            await result.Should().ThrowAsync<SchoolApplicationValidationException>();
         }
 
         /// <summary>
@@ -177,11 +187,11 @@ namespace SchoolApplication.Services.Tests.Services
         {
             // Arrange
             var model = TestDataGenerator.Student();
-            await Context.AddAsync(model);
+            Context.Add(model);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
-            Func<Task> result = () => studentService.Delete(model.Id, CancellationToken.None);
+            var result = () => studentService.Delete(model.Id, CancellationToken.None);
 
             // Assert
             await result.Should().NotThrowAsync();
@@ -200,7 +210,7 @@ namespace SchoolApplication.Services.Tests.Services
             var id = Guid.NewGuid();
 
             // Act
-            Func<Task> result = () => studentService.Delete(id, CancellationToken.None);
+            var result = () => studentService.Delete(id, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();
@@ -214,11 +224,11 @@ namespace SchoolApplication.Services.Tests.Services
         {
             // Arrange
             var model = TestDataGenerator.Student(x => x.DeletedAt = DateTime.UtcNow);
-            await Context.AddAsync(model);
+            Context.Add(model);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
-            Func<Task> result = () => studentService.Delete(model.Id, CancellationToken.None);
+            var result = () => studentService.Delete(model.Id, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();
