@@ -98,6 +98,8 @@ namespace SchoolApplication.Repositories.Tests
         {
             // Arrange
             var application = TestDataGenerator.Application(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.Add(application);
+            await Context.SaveChangesAsync();
 
             // Act
             var result = await applicationReadRepository.GetAll(CancellationToken.None);

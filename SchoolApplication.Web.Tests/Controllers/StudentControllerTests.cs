@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Entities;
-using SchoolApplication.Tests.Extensions;
 using SchoolApplication.Web.Controllers;
 using SchoolApplication.Web.Tests.Client;
 using SchoolApplication.Web.Tests.Infrastructure;
@@ -40,9 +39,7 @@ namespace SchoolApplication.Web.Tests.Controllers
         public async Task GetAllShouldReturnValue()
         {
             // Arrange
-            var student = TestDataGenerator.Student();
-            Context.Add(student);
-            await Context.SaveChangesAsync();
+            var student = await Seeder.SeedStudent();
 
             // Act
             var response = await WebClient.StudentAllAsync();
@@ -192,13 +189,13 @@ namespace SchoolApplication.Web.Tests.Controllers
             students.Should().BeEmpty();
         }
 
-        public async Task InitializeAsync()
+        async Task IAsyncLifetime.InitializeAsync()
         {
             var students = Context.Set<Student>();
             Context.RemoveRange(students);
             await Context.SaveChangesAsync();
         }
 
-        public Task DisposeAsync() => Task.CompletedTask;
+        Task IAsyncLifetime.DisposeAsync() => Task.CompletedTask;
     }
 }

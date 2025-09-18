@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Entities;
-using SchoolApplication.Tests.Extensions;
 using SchoolApplication.Web.Controllers;
 using SchoolApplication.Web.Tests.Client;
 using SchoolApplication.Web.Tests.Infrastructure;
@@ -181,13 +180,13 @@ namespace SchoolApplication.Web.Tests.Controllers
             parents.Should().BeEmpty();
         }
 
-        public async Task InitializeAsync()
+        async Task IAsyncLifetime.InitializeAsync()
         {
             var parents = Context.Set<Parent>();
             Context.RemoveRange(parents);
             await Context.SaveChangesAsync();
         }
 
-        public Task DisposeAsync() => Task.CompletedTask;
+        Task IAsyncLifetime.DisposeAsync() => Task.CompletedTask;
     }
 }

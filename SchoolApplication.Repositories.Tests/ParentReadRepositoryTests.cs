@@ -74,8 +74,7 @@ namespace SchoolApplication.Repositories.Tests
 
             // Assert
             result.Should()
-                .NotBeNull()
-                .And.BeEquivalentTo(parent);
+                .BeEquivalentTo(parent);
         }
 
         /// <summary>

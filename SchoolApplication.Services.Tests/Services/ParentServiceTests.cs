@@ -125,8 +125,7 @@ namespace SchoolApplication.Services.Tests.Services
 
             // Assert
             result.Should()
-                .NotBeNull()
-                .And.BeEquivalentTo(model);
+                .BeEquivalentTo(model);
         }
 
         /// <summary>

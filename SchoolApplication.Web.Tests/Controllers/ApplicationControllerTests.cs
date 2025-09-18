@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Entities;
-using SchoolApplication.Tests.Extensions;
 using SchoolApplication.Web.Controllers;
 using SchoolApplication.Web.Tests.Client;
 using SchoolApplication.Web.Tests.Infrastructure;
