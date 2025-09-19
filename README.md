@@ -6,6 +6,37 @@ erDiagram
     Application ||--|| School: использует
     Application ||--|| Student: использует
     Application ||--|| Parent: использует
+
+    Application {
+        Guid Id
+        string Reason
+        DateOnly DateFrom
+        DateOnly DateUntil
+        Guid ParentId
+        Guid SchoolId
+        Guid StudentId
+    }
+
+    Student {
+        Guid Id
+        Gender Gender
+        string Surname
+        string Name
+        string Patronymic
+    }
+
+    School {
+        Guid Id
+        string Name
+        string DirectorName
+    }
+
+    Parent {
+        Guid Id
+        string Surname
+        string Name
+        string Patronymic
+    }
 ```
 # Пример реального бизнес сценария
 <img width="1200" height="637" alt="target" src="https://github.com/user-attachments/assets/67ce64c3-30f1-4533-b4ec-64f8d14df785" />
@@ -14,7 +45,7 @@ erDiagram
 ## CRUD заявлений
 |TYPE|URL|DESCRIPTION|REQUEST|RESPONSE|CODES|
 |-|-|-|-|-|-|
-| GET | Api/Application/{id}/export | Экспортирует заявление | FromRoute: id | File .xlsx | 200 OK<br/>404 NotFound |
+| GET | Api/Application/{id}/Export | Экспортирует заявление | FromRoute: id | File .xlsx | 200 OK<br/>404 NotFound |
 | GET | Api/Application/| Получает список всех заявлений | | `ApplicationApiModel[]` | 200 OK |
 | GET | Api/Application/{id}| Получает заявление по идентификатору | FromRoute: id | `ApplicationApiModel` | 200 OK<br/>404 NotFound |
 | POST | Api/Application/| Добавляет новое заявление | FromBody: `ApplicationRequestApiModel` | `ApplicationApiModel` | 200 OK<br/>422 UnprocessableEntity |
@@ -90,7 +121,7 @@ erDiagram
 |TYPE|URL|DESCRIPTION|REQUEST|RESPONSE|CODES|
 |-|-|-|-|-|-|
 | GET | Api/School/|Получает список всех школ | | `SchoolApiModel[]` | 200 OK |
-| GET | Api/School/| Получает школу по идентификатору | FromRoute: id | `SchoolApiModel` | 200 OK<br/>404 NotFound |
+| GET | Api/School/{id}| Получает школу по идентификатору | FromRoute: id | `SchoolApiModel` | 200 OK<br/>404 NotFound |
 | POST | Api/School/|Добавляет новую школу | FromBody: `SchoolCreateRequestApiModel` | `SchoolApiModel` | 200 OK<br/>422 UnprocessableEntity |
 | PUT | Api/School/{id}|Редактирует школу по идентификатору | FromRoute: id <br/>FromBody: `SchoolCreateRequestApiModel` | `SchoolApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
 | DELETE | Api/School/{id}|Удаляет школу по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
