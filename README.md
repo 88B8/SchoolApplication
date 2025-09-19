@@ -98,7 +98,7 @@ erDiagram
 | GET | Api/Parent/{id}| Получает родителя по идентификатору | FromRoute: id | `ParentApiModel` | 200 OK<br/>404 NotFound |
 | POST | Api/Parent/|Добавляет нового родителя | FromBody: `ParentCreateRequestApiModel` | `ParentApiModel` | 200 OK<br/>422 UnprocessableEntity |
 | PUT | Api/Parent/{id}|Редактирует родителя по идентификатору | FromRoute: id <br/>FromBody: `ParentCreateRequestApiModel` | `ParentApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
-| DELETE | Api/Parent/{id}|Удаляет родителя по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
+| DELETE | Api/Parent/{id}|Удаляет родителя по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound |
 
 ```javascript
 // ParentApiModel
@@ -124,7 +124,7 @@ erDiagram
 | GET | Api/School/{id}| Получает школу по идентификатору | FromRoute: id | `SchoolApiModel` | 200 OK<br/>404 NotFound |
 | POST | Api/School/|Добавляет новую школу | FromBody: `SchoolCreateRequestApiModel` | `SchoolApiModel` | 200 OK<br/>422 UnprocessableEntity |
 | PUT | Api/School/{id}|Редактирует школу по идентификатору | FromRoute: id <br/>FromBody: `SchoolCreateRequestApiModel` | `SchoolApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
-| DELETE | Api/School/{id}|Удаляет школу по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
+| DELETE | Api/School/{id}|Удаляет школу по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound |
 
 ```javascript
 // SchoolApiModel
@@ -148,7 +148,7 @@ erDiagram
 | GET | Api/Student/{id}| Получает ученика по идентификатору | FromRoute: id | `StudentApiModel` | 200 OK<br/>404 NotFound |
 | POST | Api/Student/|Добавляет нового ученика | FromBody: `StudentCreateRequestApiModel` | `StudentApiModel` | 200 OK<br/>422 UnprocessableEntity |
 | PUT | Api/Student/{id}|Редактирует ученика по идентификатору | FromRoute: id <br/>FromBody: `StudentCreateRequestApiModel` | `StudentApiModel` | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
-| DELETE | Api/Student/{id}|Удаляет ученика по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound<br/>422 UnprocessableEntity |
+| DELETE | Api/Student/{id}|Удаляет ученика по идентификатору | FromRoute: id | | 200 OK<br/>404 NotFound |
 
 ```javascript
 // StudentApiModel
