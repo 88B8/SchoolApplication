@@ -79,7 +79,7 @@ namespace SchoolApplication.Web.Tests.Controllers
             // Arrange
             var model = new SchoolCreateRequestApiModel
             {
-                Name = "Школа №3",
+                Name = $"test_school_{Guid.NewGuid()}",
                 DirectorName = "Васильева С.Б.",
             };
 
@@ -122,7 +122,7 @@ namespace SchoolApplication.Web.Tests.Controllers
             var school = await Seeder.SeedSchool();
             var model = new SchoolCreateRequestApiModel
             {
-                Name = "Школа №3",
+                Name = $"test_school_{Guid.NewGuid()}",
                 DirectorName = "Петрова С.Б.",
             };
 
@@ -131,7 +131,7 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Assert
             response.DirectorName.Should()
-                .Be("Петрова С.Б.");
+                .Be(model.DirectorName);
         }
 
         /// <summary>
@@ -176,8 +176,9 @@ namespace SchoolApplication.Web.Tests.Controllers
 
         async Task IAsyncLifetime.InitializeAsync()
         {
-            var schools = Context.Set<School>();
-            Context.RemoveRange(schools);
+            var testSchools = Context.Set<School>()
+                .Where(x => x.Name.StartsWith("test_"));
+            Context.RemoveRange(testSchools);
             await Context.SaveChangesAsync();
         }
 

@@ -23,7 +23,11 @@ namespace SchoolApplication.Tests.Extensions
         /// </summary>
         public async Task<School> SeedSchool(Action<School>? settings = null)
         {
-            var school = TestDataGenerator.School(settings);
+            var school = TestDataGenerator.School(x =>
+            {
+                x.Name = $"test_school_{Guid.NewGuid()}";
+                settings?.Invoke(x);
+            });
 
             context.Add(school);
             await context.SaveChangesAsync();
@@ -36,7 +40,11 @@ namespace SchoolApplication.Tests.Extensions
         /// </summary>
         public async Task<Parent> SeedParent(Action<Parent>? settings = null)
         {
-            var parent = TestDataGenerator.Parent(settings);
+            var parent = TestDataGenerator.Parent(x =>
+            {
+                x.Name = $"test_parent_{Guid.NewGuid()}";
+                settings?.Invoke(x);
+            });
 
             context.Add(parent);
             await context.SaveChangesAsync();
@@ -49,7 +57,11 @@ namespace SchoolApplication.Tests.Extensions
         /// </summary>
         public async Task<Student> SeedStudent(Action<Student>? settings = null)
         {
-            var student = TestDataGenerator.Student(settings);
+            var student = TestDataGenerator.Student(x =>
+            {
+                x.Name = $"test_student_{Guid.NewGuid()}";
+                settings?.Invoke(x);
+            });
 
             context.Add(student);
             await context.SaveChangesAsync();
@@ -66,7 +78,11 @@ namespace SchoolApplication.Tests.Extensions
             var student = await SeedStudent();
             var school = await SeedSchool();
 
-            var application = TestDataGenerator.Application(settings);
+            var application = TestDataGenerator.Application(x =>
+            {
+                x.Reason = $"test_application_{Guid.NewGuid()}";
+                settings?.Invoke(x);
+            });
 
             application.Parent = parent;
             application.ParentId = parent.Id;

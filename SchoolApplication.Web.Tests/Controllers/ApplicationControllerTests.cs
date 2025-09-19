@@ -25,6 +25,9 @@ namespace SchoolApplication.Web.Tests.Controllers
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            
+
             // Act
             var response = await WebClient.ApplicationAllAsync();
 
@@ -112,7 +115,7 @@ namespace SchoolApplication.Web.Tests.Controllers
                 StudentId = student.Id,
                 ParentId = parent.Id,
                 SchoolId = school.Id,
-                Reason = "по семейным обстоятельствам",
+                Reason = $"test_application_{Guid.NewGuid()}",
                 DateFrom = DateOnly.FromDateTime(new DateTime(2025, 07, 13)),
                 DateUntil = DateOnly.FromDateTime(new DateTime(2025, 07, 14)),
             };
@@ -175,7 +178,7 @@ namespace SchoolApplication.Web.Tests.Controllers
                 StudentId = student.Id,
                 ParentId = parent.Id,
                 SchoolId = school.Id,
-                Reason = "по семейным обстоятельствам",
+                Reason = $"test_application_{Guid.NewGuid()}",
                 DateFrom = DateOnly.FromDateTime(new DateTime(2025, 07, 13)),
                 DateUntil = DateOnly.FromDateTime(new DateTime(2025, 07, 14)),
             };
@@ -185,7 +188,7 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Assert
             response.Reason.Should()
-                .Be("по семейным обстоятельствам");
+                .Be(model.Reason);
         }
 
         /// <summary>
@@ -230,16 +233,17 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Act
             await WebClient.ApplicationDELETEAsync(application.Id);
-            var applications = await WebClient.ApplicationAllAsync();
 
             // Assert
+            var applications = await WebClient.ApplicationAllAsync();
             applications.Should().BeEmpty();
         }
 
         async Task IAsyncLifetime.InitializeAsync()
         {
-            var applications = Context.Set<Application>();
-            Context.RemoveRange(applications);
+            var testApplications = Context.Set<Application>()
+                .Where(x => x.Reason.StartsWith("test_"));
+            Context.RemoveRange(testApplications);
             await Context.SaveChangesAsync();
         }
 

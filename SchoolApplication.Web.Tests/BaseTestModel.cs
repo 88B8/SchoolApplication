@@ -12,7 +12,9 @@ namespace SchoolApplication.Web.Tests
     public class BaseTestModel
     {
         protected ISchoolApplicationApiClient WebClient { get; }
+
         protected SchoolApplicationContext Context { get; }
+
         protected TestDataSeeder Seeder { get; }
 
         /// <summary>

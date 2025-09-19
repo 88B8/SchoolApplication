@@ -200,6 +200,35 @@ namespace SchoolApplication.Services.Tests.Services
         }
 
         /// <summary>
+        /// Тест на удаление связанных заявлений
+        /// </summary>
+        [Fact]
+        public async Task DeleteShouldDeleteRelatedApplications()
+        {
+            // Arrange
+            var student = TestDataGenerator.Student();
+            var application = TestDataGenerator.Application(x =>
+            {
+                x.Student = student;
+                x.StudentId = student.Id;
+            });
+            Context.AddRange(student, application);
+            await UnitOfWork.SaveChangesAsync();
+
+            // Act
+            await studentService.Delete(student.Id, CancellationToken.None);
+
+            // Assert
+            var deletedStudent = await Context.Set<Student>().FindAsync(student.Id);
+            var deletedApplication = await Context.Set<Application>().FindAsync(application.Id);
+
+            Assert.NotNull(deletedStudent);
+            Assert.NotNull(deletedApplication);
+            Assert.NotNull(deletedStudent.DeletedAt);
+            Assert.NotNull(deletedApplication.DeletedAt);
+        }
+
+        /// <summary>
         /// Тест на удаление несуществующего <see cref="Student"/>
         /// </summary>
         [Fact]

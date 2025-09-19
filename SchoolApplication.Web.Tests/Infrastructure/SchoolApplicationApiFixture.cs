@@ -21,6 +21,9 @@ namespace SchoolApplication.Web.Tests.Infrastructure
             factory = new TestWebApplicationFactory();
         }
 
+        /// <summary>
+        /// Предоставляет доступ к констексту
+        /// </summary>
         internal SchoolApplicationContext Context
         {
             get
@@ -36,6 +39,9 @@ namespace SchoolApplication.Web.Tests.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Предоставляет доступ к веб клиенту
+        /// </summary>
         internal ISchoolApplicationApiClient WebClient
         {
             get
@@ -45,11 +51,10 @@ namespace SchoolApplication.Web.Tests.Infrastructure
             }
         }
 
-        /// <summary>
-        /// Применяет все миграции
-        /// </summary>
+        /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
         public Task InitializeAsync() => Context.Database.MigrateAsync();
 
+        /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         async Task IAsyncLifetime.DisposeAsync()
         {
             await Context.Database.EnsureDeletedAsync();

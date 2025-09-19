@@ -49,5 +49,53 @@ namespace SchoolApplication.Repositories.ReadRepositories
                 })
                 .ById(id)
                 .FirstOrDefaultAsync(cancellationToken);
+
+        Task<IReadOnlyCollection<ApplicationDbModel>> IApplicationReadRepository.GetByParentId(Guid id, CancellationToken cancellationToken)
+            => reader.Read<Application>()
+                .NotDeletedAt()
+                .ByParentId(id)
+                .Select(x => new ApplicationDbModel
+                {
+                    Id = x.Id,
+                    Student = x.Student,
+                    Parent = x.Parent,
+                    School = x.School,
+                    Reason = x.Reason,
+                    DateFrom = x.DateFrom,
+                    DateUntil = x.DateUntil,
+                })
+                .ToReadOnlyCollectionAsync(cancellationToken);
+
+        Task<IReadOnlyCollection<ApplicationDbModel>> IApplicationReadRepository.GetBySchoolId(Guid id, CancellationToken cancellationToken)
+            => reader.Read<Application>()
+                .NotDeletedAt()
+                .BySchoolId(id)
+                .Select(x => new ApplicationDbModel
+                {
+                    Id = x.Id,
+                    Student = x.Student,
+                    Parent = x.Parent,
+                    School = x.School,
+                    Reason = x.Reason,
+                    DateFrom = x.DateFrom,
+                    DateUntil = x.DateUntil,
+                })
+                .ToReadOnlyCollectionAsync(cancellationToken);
+
+        Task<IReadOnlyCollection<ApplicationDbModel>> IApplicationReadRepository.GetByStudentId(Guid id, CancellationToken cancellationToken)
+            => reader.Read<Application>()
+                .NotDeletedAt()
+                .ByStudentId(id)
+                .Select(x => new ApplicationDbModel
+                {
+                    Id = x.Id,
+                    Student = x.Student,
+                    Parent = x.Parent,
+                    School = x.School,
+                    Reason = x.Reason,
+                    DateFrom = x.DateFrom,
+                    DateUntil = x.DateUntil,
+                })
+                .ToReadOnlyCollectionAsync(cancellationToken);
     }
 }

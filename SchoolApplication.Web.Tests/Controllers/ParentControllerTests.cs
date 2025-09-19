@@ -82,7 +82,7 @@ namespace SchoolApplication.Web.Tests.Controllers
             var model = new ParentCreateRequestApiModel
             {
                 Surname = "Петрова",
-                Name = "Наталья",
+                Name = $"test_parent_{Guid.NewGuid()}",
                 Patronymic = "Владимировна",
             };
 
@@ -127,7 +127,7 @@ namespace SchoolApplication.Web.Tests.Controllers
             var model = new ParentCreateRequestApiModel
             {
                 Surname = "Петрова",
-                Name = "Наталья",
+                Name = $"test_parent_{Guid.NewGuid()}",
                 Patronymic = "Владиславовна",
             };
 
@@ -135,8 +135,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.ParentPUTAsync(parent.Id, model);
 
             // Assert
-            response.Patronymic.Should()
-                .Be("Владиславовна");
+            response.Patronymic
+                .Should().Be(model.Patronymic);
         }
 
         /// <summary>
@@ -174,16 +174,17 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Act
             await WebClient.ParentDELETEAsync(parent.Id);
-            var parents = await WebClient.ParentAllAsync();
 
             // Assert
+            var parents = await WebClient.ParentAllAsync();
             parents.Should().BeEmpty();
         }
 
         async Task IAsyncLifetime.InitializeAsync()
         {
-            var parents = Context.Set<Parent>();
-            Context.RemoveRange(parents);
+            var testParents = Context.Set<Parent>()
+                .Where(x => x.Name.StartsWith("test_"));
+            Context.RemoveRange(testParents);
             await Context.SaveChangesAsync();
         }
 

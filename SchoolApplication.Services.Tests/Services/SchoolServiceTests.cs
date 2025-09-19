@@ -11,6 +11,7 @@ using SchoolApplication.Services.Contracts.Exceptions;
 using SchoolApplication.Services.Services;
 using SchoolApplication.Services.Infrastructure;
 using SchoolApplication.Services.Contracts.Services;
+using SchoolApplication.Services.Tests.Validators;
 
 namespace SchoolApplication.Services.Tests.Services
 {
@@ -198,6 +199,35 @@ namespace SchoolApplication.Services.Tests.Services
             entity.Should().NotBeNull();
             entity.DeletedAt.Should().NotBeNull();
         }
+
+        /// <summary>
+        /// Тест на удаление связанных заявлений
+        /// </summary>
+        [Fact]
+        public async Task DeleteShouldDeleteRelatedApplications()
+        {
+            // Arrange
+            var school = TestDataGenerator.School();
+            var application = TestDataGenerator.Application(x =>
+            {
+                x.School = school;
+                x.SchoolId = school.Id;
+            });
+            Context.AddRange(school, application);
+            await UnitOfWork.SaveChangesAsync();
+
+            // Act
+            await schoolService.Delete(school.Id, CancellationToken.None);
+
+            // Assert
+            var deletedSchool = await Context.Set<School>().FindAsync(school.Id);
+            var deletedApplication = await Context.Set<Application>().FindAsync(application.Id);
+
+            Assert.NotNull(deletedSchool);
+            Assert.NotNull(deletedApplication);
+            Assert.NotNull(deletedSchool.DeletedAt);
+            Assert.NotNull(deletedApplication.DeletedAt);
+;       }
 
         /// <summary>
         /// Тест на удаление несуществующего <see cref="School"/>

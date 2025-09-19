@@ -81,15 +81,12 @@ namespace SchoolApplication.Services.Services
 
             schoolWriteRepository.Delete(entity);
 
-            var existedApplicationDbModels = await applicationReadRepository.GetAll(cancellationToken);
-            var existedApplications = mapper.Map<IReadOnlyCollection<Application>>(existedApplicationDbModels);
+            var relatedApplicationDbModels = await applicationReadRepository.GetBySchoolId(id, cancellationToken);
+            var relatedApplications = mapper.Map<IReadOnlyCollection<Application>>(relatedApplicationDbModels);
 
-            foreach (var application in existedApplications)
+            foreach (var application in relatedApplications)
             {
-                if (application.School.Id == id)
-                {
-                    applicationWriteRepository.Delete(application);
-                }
+                applicationWriteRepository.Delete(application);
             }
 
             await unitOfWork.SaveChangesAsync(cancellationToken);

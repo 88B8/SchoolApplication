@@ -83,7 +83,7 @@ namespace SchoolApplication.Web.Tests.Controllers
             var model = new StudentCreateRequestApiModel
             {
                 Surname = "Петров",
-                Name = "Петр",
+                Name = $"test_student_{Guid.NewGuid()}",
                 Patronymic = "Петрович",
                 Gender = GenderApiModel._0,
                 Grade = "9В",
@@ -132,7 +132,7 @@ namespace SchoolApplication.Web.Tests.Controllers
             var model = new StudentCreateRequestApiModel()
             {
                 Surname = "Петров",
-                Name = "Петр",
+                Name = $"test_student_{Guid.NewGuid()}",
                 Patronymic = "Петрович",
                 Gender = GenderApiModel._0,
                 Grade = "9Г",
@@ -143,7 +143,7 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Assert
             response.Grade.Should()
-                .Be("9Г");
+                .Be(model.Grade);
         }
 
         /// <summary>
@@ -191,8 +191,9 @@ namespace SchoolApplication.Web.Tests.Controllers
 
         async Task IAsyncLifetime.InitializeAsync()
         {
-            var students = Context.Set<Student>();
-            Context.RemoveRange(students);
+            var testStudents = Context.Set<Student>()
+                .Where(x => x.Name.StartsWith("test_"));
+            Context.RemoveRange(testStudents);
             await Context.SaveChangesAsync();
         }
 

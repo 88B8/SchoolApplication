@@ -17,5 +17,20 @@ namespace SchoolApplication.Repositories.Contracts.ReadRepositories
         /// Получает коллекцию всех <see cref="Application"/>
         /// </summary>
         Task<IReadOnlyCollection<ApplicationDbModel>> GetAll(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Получает коллекцию всех <see cref="Application"/> по идентификатору ученика
+        /// </summary>
+        Task<IReadOnlyCollection<ApplicationDbModel>> GetByStudentId(Guid id, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Получает коллекцию всех <see cref="Application"/> по идентификатору школы
+        /// </summary>
+        Task<IReadOnlyCollection<ApplicationDbModel>> GetBySchoolId(Guid id, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Получает коллекцию всех <see cref="Application"/> по идентификатору родителя
+        /// </summary>
+        Task<IReadOnlyCollection<ApplicationDbModel>> GetByParentId(Guid id, CancellationToken cancellationToken);
     }
 }
