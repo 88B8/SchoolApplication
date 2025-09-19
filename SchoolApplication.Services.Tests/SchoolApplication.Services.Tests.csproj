@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+	  <RootNamespace>SchoolApplication.Services.Tests</RootNamespace>
+	  <AssemblyName>SchoolApplication.Services.Tests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="8.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SchoolApplication.Common.Contracts\SchoolApplication.Common.Contracts.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Context.Tests\SchoolApplication.Context.Tests.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Repositories\SchoolApplication.Repositories.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Services\SchoolApplication.Services.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Tests.Extensions\SchoolApplication.Tests.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

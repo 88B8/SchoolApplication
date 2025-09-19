@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <RootNamespace>SchoolApplication.Services</RootNamespace>
+	  <AssemblyName>SchoolApplication.Services</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="3.1.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataBase\SchoolApplication.Context.Contracts\SchoolApplication.Context.Contracts.csproj" />
+    <ProjectReference Include="..\DataBase\SchoolApplication.Context\SchoolApplication.Context.csproj" />
+    <ProjectReference Include="..\DataBase\SchoolApplication.Entities\SchoolApplication.Entities.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Common\SchoolApplication.Common.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Repositories.Contracts\SchoolApplication.Repositories.Contracts.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Services.Contracts\SchoolApplication.Services.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
