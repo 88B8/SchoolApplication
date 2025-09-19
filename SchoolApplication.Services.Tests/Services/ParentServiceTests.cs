@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using AutoMapper.Configuration.Annotations;
 using Moq;
 using FluentAssertions;
 using SchoolApplication.Common.Contracts;
