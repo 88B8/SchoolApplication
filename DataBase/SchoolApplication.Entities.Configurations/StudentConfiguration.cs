@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SchoolApplication.Entities.Contracts.ValidationRules;
+using SchoolApplication.Entities.ValidationRules;
 
 namespace SchoolApplication.Entities.Configurations
 {
@@ -23,7 +23,7 @@ namespace SchoolApplication.Entities.Configurations
                 .HasMaxLength(StudentValidationRules.NameMaxLength)
                 .IsRequired();
 
-            builder.Property(x => x.Name)
+            builder.Property(x => x.Patronymic)
                 .HasMaxLength(StudentValidationRules.PatronymicMaxLength)
                 .IsRequired();
 

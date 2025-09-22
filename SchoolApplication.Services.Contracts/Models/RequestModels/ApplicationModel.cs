@@ -1,9 +1,11 @@
-﻿namespace SchoolApplication.Services.Contracts.Models.RequestModels
+﻿using SchoolApplication.Services.Contracts.Models.BaseModels;
+
+namespace SchoolApplication.Services.Contracts.Models.RequestModels
 {
     /// <summary>
     /// Модель заявления
     /// </summary>
-    public class ApplicationModel
+    public class ApplicationModel : ApplicationBaseModel
     {
         /// <summary>
         /// Идентификатор
@@ -24,20 +26,5 @@
         /// Навигационное свойство ученика
         /// </summary>
         public StudentModel Student { get; set; } = null!;
-
-        /// <summary>
-        /// Причина заявления
-        /// </summary>
-        public string Reason { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Дата, с которой ученик отсутствует
-        /// </summary>
-        public DateOnly DateFrom { get; set; }
-
-        /// <summary>
-        /// Дата, по которую ученик отсутствует
-        /// </summary>
-        public DateOnly DateUntil { get; set; }
     }
 }

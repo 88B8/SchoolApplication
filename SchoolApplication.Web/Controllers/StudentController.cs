@@ -5,7 +5,7 @@ using SchoolApplication.Services.Contracts.Models.RequestModels;
 using SchoolApplication.Services.Contracts.Services;
 using SchoolApplication.Web.Exceptions;
 using SchoolApplication.Web.Models.CreateRequestApiModels;
-using SchoolApplication.Web.Models.ResponseModels;
+using SchoolApplication.Web.Models.ResponseApiModels;
 
 namespace SchoolApplication.Web.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace SchoolApplication.Entities.Contracts.ValidationRules
+﻿namespace SchoolApplication.Entities.ValidationRules
 {
     /// <summary>
     /// Правила валидации <see cref="Parent"/>

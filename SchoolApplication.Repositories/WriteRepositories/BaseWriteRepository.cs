@@ -1,8 +1,9 @@
 ﻿using SchoolApplication.Common.Contracts;
+using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities.Contracts;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SchoolApplication.Context.Contracts
+namespace SchoolApplication.Repositories.WriteRepositories
 {
     /// <summary>
     /// Базовый класс репозитория записи данных

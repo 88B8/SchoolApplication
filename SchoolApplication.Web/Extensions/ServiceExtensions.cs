@@ -1,7 +1,7 @@
 ﻿using SchoolApplication.Common.Contracts;
 using SchoolApplication.Common.Infrastructure;
 using SchoolApplication.Context;
-using SchoolApplication.Repositories;
+using SchoolApplication.Repositories.Extensions;
 using SchoolApplication.Services;
 using SchoolApplication.Services.Infrastructure;
 using SchoolApplication.Web.Infrastructure;

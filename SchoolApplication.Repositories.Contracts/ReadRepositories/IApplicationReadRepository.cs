@@ -14,6 +14,11 @@ namespace SchoolApplication.Repositories.Contracts.ReadRepositories
         Task<ApplicationDbModel?> GetById(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Получает <see cref="Application"/> по идентификатору без связанных сущностей
+        /// </summary>
+        Task<Application?> GetByIdRaw(Guid id, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Получает коллекцию всех <see cref="Application"/>
         /// </summary>
         Task<IReadOnlyCollection<ApplicationDbModel>> GetAll(CancellationToken cancellationToken);

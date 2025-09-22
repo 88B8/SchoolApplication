@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.ObjectModel;
 using SchoolApplication.Entities.Contracts;
+using System.Collections.ObjectModel;
 
-namespace SchoolApplication.Context.Contracts
+namespace SchoolApplication.Repositories.Specs
 {
     /// <summary>
     /// Общие спецификации
@@ -22,27 +22,6 @@ namespace SchoolApplication.Context.Contracts
         public static IQueryable<TEntity> ById<TEntity>(this IQueryable<TEntity> query, Guid id)
             where TEntity : class, IEntityWithId
             => query.Where(x => x.Id == id);
-
-        /// <summary>
-        /// По идентификатору родителя
-        /// </summary>
-        public static IQueryable<TEntity> ByParentId<TEntity>(this IQueryable<TEntity> query, Guid id)
-            where TEntity : class, IEntityWithParentId
-            => query.Where(x => x.ParentId == id);
-
-        /// <summary>
-        /// По идентификатору школы
-        /// </summary>
-        public static IQueryable<TEntity> BySchoolId<TEntity>(this IQueryable<TEntity> query, Guid id)
-            where TEntity : class, IEntityWithSchoolId
-            => query.Where(x => x.SchoolId == id);
-
-        /// <summary>
-        /// По идентификатору ученика
-        /// </summary>
-        public static IQueryable<TEntity> ByStudentId<TEntity>(this IQueryable<TEntity> query, Guid id)
-            where TEntity : class, IEntityWithStudentId
-            => query.Where(x => x.StudentId == id);
 
         /// <summary>
         /// Возвращает <see cref="IReadOnlyCollection{TEntity}"/>

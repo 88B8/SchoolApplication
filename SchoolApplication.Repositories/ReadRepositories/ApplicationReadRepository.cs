@@ -3,6 +3,8 @@ using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities;
 using SchoolApplication.Repositories.Contracts.Models;
 using SchoolApplication.Repositories.Contracts.ReadRepositories;
+using SchoolApplication.Repositories.Extensions;
+using SchoolApplication.Repositories.Specs;
 
 namespace SchoolApplication.Repositories.ReadRepositories
 {
@@ -22,80 +24,41 @@ namespace SchoolApplication.Repositories.ReadRepositories
         Task<IReadOnlyCollection<ApplicationDbModel>> IApplicationReadRepository.GetAll(CancellationToken cancellationToken)
             => reader.Read<Application>()
                 .NotDeletedAt()
-                .Select(x => new ApplicationDbModel
-                {
-                    Id = x.Id,
-                    Student = x.Student,
-                    Parent = x.Parent,
-                    School = x.School,
-                    Reason = x.Reason,
-                    DateFrom = x.DateFrom,
-                    DateUntil = x.DateUntil,
-                })
+                .ToDbModel()
                 .ToReadOnlyCollectionAsync(cancellationToken);
 
         Task<ApplicationDbModel?> IApplicationReadRepository.GetById(Guid id, CancellationToken cancellationToken)
             => reader.Read<Application>()
                 .NotDeletedAt()
-                .Select(x => new ApplicationDbModel
-                {
-                    Id = x.Id,
-                    Student = x.Student,
-                    Parent = x.Parent,
-                    School = x.School,
-                    Reason = x.Reason,
-                    DateFrom = x.DateFrom,
-                    DateUntil = x.DateUntil,
-                })
+                .ToDbModel()
+                .ById(id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+        Task<Application?> IApplicationReadRepository.GetByIdRaw(Guid id, CancellationToken cancellationToken)
+            => reader.Read<Application>()
+                .NotDeletedAt()
                 .ById(id)
                 .FirstOrDefaultAsync(cancellationToken);
 
         Task<IReadOnlyCollection<ApplicationDbModel>> IApplicationReadRepository.GetByParentId(Guid id, CancellationToken cancellationToken)
             => reader.Read<Application>()
                 .NotDeletedAt()
-                .ByParentId(id)
-                .Select(x => new ApplicationDbModel
-                {
-                    Id = x.Id,
-                    Student = x.Student,
-                    Parent = x.Parent,
-                    School = x.School,
-                    Reason = x.Reason,
-                    DateFrom = x.DateFrom,
-                    DateUntil = x.DateUntil,
-                })
+                .Where(x => x.ParentId == id)
+                .ToDbModel()
                 .ToReadOnlyCollectionAsync(cancellationToken);
 
         Task<IReadOnlyCollection<ApplicationDbModel>> IApplicationReadRepository.GetBySchoolId(Guid id, CancellationToken cancellationToken)
             => reader.Read<Application>()
                 .NotDeletedAt()
-                .BySchoolId(id)
-                .Select(x => new ApplicationDbModel
-                {
-                    Id = x.Id,
-                    Student = x.Student,
-                    Parent = x.Parent,
-                    School = x.School,
-                    Reason = x.Reason,
-                    DateFrom = x.DateFrom,
-                    DateUntil = x.DateUntil,
-                })
+                .Where(x => x.SchoolId == id)
+                .ToDbModel()
                 .ToReadOnlyCollectionAsync(cancellationToken);
 
         Task<IReadOnlyCollection<ApplicationDbModel>> IApplicationReadRepository.GetByStudentId(Guid id, CancellationToken cancellationToken)
             => reader.Read<Application>()
                 .NotDeletedAt()
-                .ByStudentId(id)
-                .Select(x => new ApplicationDbModel
-                {
-                    Id = x.Id,
-                    Student = x.Student,
-                    Parent = x.Parent,
-                    School = x.School,
-                    Reason = x.Reason,
-                    DateFrom = x.DateFrom,
-                    DateUntil = x.DateUntil,
-                })
+                .Where(x => x.StudentId == id)
+                .ToDbModel()
                 .ToReadOnlyCollectionAsync(cancellationToken);
     }
 }

@@ -64,34 +64,36 @@ namespace SchoolApplication.Services.Services
 
         async Task<ApplicationModel> IApplicationService.Edit(Guid id, ApplicationCreateModel model, CancellationToken cancellationToken)
         {
-            var dbModel = await applicationReadRepository.GetById(id, cancellationToken)
+            var entity = await applicationReadRepository.GetByIdRaw(id, cancellationToken)
                 ?? throw new SchoolApplicationNotFoundException($"Не удалось найти заявление с идентификатором {id}");
 
-            await EnsureRelationsExist(model, cancellationToken);
+            var relations = await EnsureRelationsExist(model, cancellationToken);
 
-            var entityToUpdate = mapper.Map<Application>(dbModel);
-            mapper.Map(model, entityToUpdate);
+            entity.Parent = relations.parent;
+            entity.Student = relations.student;
+            entity.School = relations.school;
 
-            applicationWriteRepository.Update(entityToUpdate);
+            mapper.Map(model, entity);
+
+            applicationWriteRepository.Update(entity);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
-            return mapper.Map<ApplicationModel>(entityToUpdate);
+            return mapper.Map<ApplicationModel>(entity);
         }
 
         async Task IApplicationService.Delete(Guid id, CancellationToken cancellationToken)
         {
-            var entity = await applicationReadRepository.GetById(id, cancellationToken)
+            var entity = await applicationReadRepository.GetByIdRaw(id, cancellationToken)
                 ?? throw new SchoolApplicationNotFoundException($"Не удалось найти заявление с идентификатором {id}");
-            var item = mapper.Map<Application>(entity);
 
-            applicationWriteRepository.Delete(item);
+            applicationWriteRepository.Delete(entity);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
-        /// Проверяет наличие связей
+        /// Проверяет и возращает связи
         /// </summary>
-        private async Task EnsureRelationsExist(ApplicationCreateModel model, CancellationToken cancellationToken)
+        private async Task<(Parent parent, Student student, School school)> EnsureRelationsExist(ApplicationCreateModel model, CancellationToken cancellationToken)
         {
             var parent = await parentReadRepository.GetById(model.ParentId, cancellationToken)
                          ?? throw new SchoolApplicationNotFoundException(
@@ -104,6 +106,8 @@ namespace SchoolApplication.Services.Services
             var school = await schoolReadRepository.GetById(model.SchoolId, cancellationToken)
                           ?? throw new SchoolApplicationNotFoundException(
                               $"Не удалось найти школу с идентификатором {model.SchoolId}");
+
+            return (parent, student, school);
         }
     }
 }

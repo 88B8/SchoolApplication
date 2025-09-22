@@ -1,11 +1,11 @@
-﻿using SchoolApplication.Services.Contracts.Models.CreateModels;
+﻿using SchoolApplication.Services.Contracts.Models.BaseModels;
 
 namespace SchoolApplication.Services.Contracts.Models.RequestModels
 {
     /// <summary>
     /// Модель ученика
     /// </summary>
-    public class StudentModel : StudentCreateModel
+    public class StudentModel : StudentBaseModel
     {
         /// <summary>
         /// Идентификатор

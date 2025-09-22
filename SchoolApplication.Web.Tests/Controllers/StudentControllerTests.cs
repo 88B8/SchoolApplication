@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Entities;
+using SchoolApplication.Entities.ValidationRules;
 using SchoolApplication.Web.Controllers;
 using SchoolApplication.Web.Tests.Client;
 using SchoolApplication.Web.Tests.Infrastructure;
@@ -25,6 +26,9 @@ namespace SchoolApplication.Web.Tests.Controllers
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            await Seeder.SeedStudent(x => x.DeletedAt = DateTimeOffset.UtcNow);
+
             // Act
             var response = await WebClient.StudentAllAsync();
 
@@ -40,12 +44,14 @@ namespace SchoolApplication.Web.Tests.Controllers
         {
             // Arrange
             var student = await Seeder.SeedStudent();
+            await Seeder.SeedStudent(x => x.DeletedAt = DateTimeOffset.UtcNow);
 
             // Act
             var response = await WebClient.StudentAllAsync();
 
             // Assert
-            response.Should().ContainSingle(x => x.Id == student.Id);
+            response.Should()
+                .ContainSingle(x => x.Id == student.Id && x.Name == student.Name);
         }
 
         /// <summary>
@@ -70,7 +76,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.StudentGETAsync(student.Id);
 
             // Assert
-            response.Should().BeEquivalentTo(expectedResult);
+            response.Should()
+                .BeEquivalentTo(expectedResult);
         }
 
         /// <summary>
@@ -93,7 +100,12 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.StudentPOSTAsync(model);
 
             // Assert
-            response.Should().BeEquivalentTo(model);
+            response.Should()
+                .BeEquivalentTo(model);
+
+            var all = await WebClient.StudentAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Name == model.Name);
         }
 
         /// <summary>
@@ -105,11 +117,11 @@ namespace SchoolApplication.Web.Tests.Controllers
             // Arrange
             var model = new StudentCreateRequestApiModel
             {
-                Surname = "1",
-                Name = "1",
-                Patronymic = "1",
+                Surname = new string('1', StudentValidationRules.SurnameMinLength - 1),
+                Name = new string('1', StudentValidationRules.NameMinLength - 1),
+                Patronymic = new string('1', StudentValidationRules.PatronymicMinLength - 1),
                 Gender = GenderApiModel._0,
-                Grade = "1",
+                Grade = new string('1', StudentValidationRules.GradeMinLength - 1),
             };
 
             // Act
@@ -142,8 +154,13 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.StudentPUTAsync(student.Id, model);
 
             // Assert
-            response.Grade.Should()
-                .Be(model.Grade);
+            response.Should()
+                .BeEquivalentTo(model, opt => opt
+                    .ExcludingMissingMembers());
+
+            var all = await WebClient.StudentAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Name == model.Name);
         }
 
         /// <summary>
@@ -156,11 +173,11 @@ namespace SchoolApplication.Web.Tests.Controllers
             var student = await Seeder.SeedStudent();
             var model = new StudentCreateRequestApiModel
             {
-                Surname = "1",
-                Name = "1",
-                Patronymic = "1",
+                Surname = new string('1', StudentValidationRules.SurnameMinLength - 1),
+                Name = new string('1', StudentValidationRules.NameMinLength - 1),
+                Patronymic = new string('1', StudentValidationRules.PatronymicMinLength - 1),
                 Gender = GenderApiModel._0,
-                Grade = "1",
+                Grade = new string('1', StudentValidationRules.GradeMinLength - 1),
             };
 
             // Act
@@ -183,10 +200,10 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Act
             await WebClient.StudentDELETEAsync(student.Id);
-            var students = await WebClient.StudentAllAsync();
 
             // Assert
-            students.Should().BeEmpty();
+            var all = await WebClient.StudentAllAsync();
+            all.Should().BeEmpty();
         }
 
         async Task IAsyncLifetime.InitializeAsync()

@@ -1,17 +1,12 @@
 ﻿using SchoolApplication.Web.Models.Enums;
 
-namespace SchoolApplication.Web.Models.ResponseModels
+namespace SchoolApplication.Web.Models.BaseModels
 {
     /// <summary>
-    /// API модель ученика
+    /// Базовая API-модель ученика
     /// </summary>
-    public class StudentApiModel
+    public abstract class StudentBaseApiModel
     {
-        /// <summary>
-        /// Идентификатор
-        /// </summary>
-        public Guid Id { get; set; }
-
         /// <summary>
         /// Пол ученика
         /// </summary>

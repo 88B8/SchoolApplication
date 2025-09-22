@@ -1,9 +1,11 @@
-﻿namespace SchoolApplication.Services.Contracts.Models.RequestModels
+﻿using SchoolApplication.Services.Contracts.Models.BaseModels;
+
+namespace SchoolApplication.Services.Contracts.Models.RequestModels
 {
     /// <summary>
     /// Модель школы
     /// </summary>
-    public class SchoolModel : SchoolCreateModel
+    public class SchoolModel : SchoolBaseModel
     {
         /// <summary>
         /// Идентификатор

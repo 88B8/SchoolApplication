@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Entities;
+using SchoolApplication.Entities.ValidationRules;
 using SchoolApplication.Web.Controllers;
 using SchoolApplication.Web.Tests.Client;
 using SchoolApplication.Web.Tests.Infrastructure;
@@ -26,7 +27,7 @@ namespace SchoolApplication.Web.Tests.Controllers
         public async Task GetAllShouldReturnEmpty()
         {
             // Arrange
-            
+            await Seeder.SeedApplication(x => x.DeletedAt = DateTimeOffset.UtcNow);
 
             // Act
             var response = await WebClient.ApplicationAllAsync();
@@ -50,7 +51,7 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Assert
             response.Should()
-                .ContainSingle(x => x.Id == application.Id);
+                .ContainSingle(x => x.Id == application.Id && x.Reason == application.Reason);
         }
 
         /// <summary>
@@ -61,6 +62,7 @@ namespace SchoolApplication.Web.Tests.Controllers
         {
             // Arrange
             var application = await Seeder.SeedApplication();
+
             var expectedResult = new ApplicationApiModel
             {
                 Id = application.Id,
@@ -126,9 +128,11 @@ namespace SchoolApplication.Web.Tests.Controllers
             // Assert
             response.Should()
                 .BeEquivalentTo(model, opt => opt
-                    .Excluding(x => x.StudentId)
-                    .Excluding(x => x.ParentId)
-                    .Excluding(x => x.SchoolId));
+                    .ExcludingMissingMembers());
+
+            var all = await WebClient.ApplicationAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Reason == model.Reason);
         }
 
         /// <summary>
@@ -147,7 +151,7 @@ namespace SchoolApplication.Web.Tests.Controllers
                 StudentId = student.Id,
                 ParentId = parent.Id,
                 SchoolId = school.Id,
-                Reason = "1",
+                Reason = new string('1', ApplicationValidationRules.ReasonMinLength - 1),
                 DateFrom = DateOnly.FromDateTime(new DateTime(2025, 07, 15)),
                 DateUntil = DateOnly.FromDateTime(new DateTime(2025, 07, 14)),
             };
@@ -187,8 +191,13 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.ApplicationPUTAsync(application.Id, model);
 
             // Assert
-            response.Reason.Should()
-                .Be(model.Reason);
+            response.Should()
+                .BeEquivalentTo(model, opt => opt
+                    .ExcludingMissingMembers());
+
+            var all = await WebClient.ApplicationAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Reason == model.Reason);
         }
 
         /// <summary>
@@ -208,7 +217,7 @@ namespace SchoolApplication.Web.Tests.Controllers
                 StudentId = student.Id,
                 ParentId = parent.Id,
                 SchoolId = school.Id,
-                Reason = "1",
+                Reason = new string('1', ApplicationValidationRules.ReasonMinLength - 1),
                 DateFrom = DateOnly.FromDateTime(new DateTime(2025, 07, 15)),
                 DateUntil = DateOnly.FromDateTime(new DateTime(2025, 07, 14)),
             };
@@ -235,8 +244,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             await WebClient.ApplicationDELETEAsync(application.Id);
 
             // Assert
-            var applications = await WebClient.ApplicationAllAsync();
-            applications.Should().BeEmpty();
+            var all = await WebClient.ApplicationAllAsync();
+            all.Should().BeEmpty();
         }
 
         async Task IAsyncLifetime.InitializeAsync()

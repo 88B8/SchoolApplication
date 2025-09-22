@@ -49,7 +49,8 @@ namespace SchoolApplication.Services.Tests.Services
             // Arrange
             var student1 = TestDataGenerator.Student();
             var student2 = TestDataGenerator.Student();
-            await Context.AddRangeAsync(student1, student2);
+            var student3 = TestDataGenerator.Student(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.AddRange(student1, student2, student3);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -57,8 +58,7 @@ namespace SchoolApplication.Services.Tests.Services
 
             // Assert
             result.Should()
-                .NotBeEmpty()
-                .And.HaveCount(2);
+                .HaveCount(2);
         }
 
         /// <summary>
@@ -67,13 +67,17 @@ namespace SchoolApplication.Services.Tests.Services
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            var student = TestDataGenerator.Student(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.Add(student);
+            await UnitOfWork.SaveChangesAsync();
+
             // Act
             var result = await studentService.GetAll(CancellationToken.None);
 
             // Assert
             result.Should()
-                .NotBeNull()
-                .And.BeEmpty();
+                .BeEmpty();
         }
 
         /// <summary>
@@ -147,9 +151,8 @@ namespace SchoolApplication.Services.Tests.Services
             Context.Add(application);
             await UnitOfWork.SaveChangesAsync();
 
-            var updatedModel = TestDataGenerator.StudentModel(x =>
+            var updatedModel = TestDataGenerator.StudentCreateModel(x =>
             {
-                x.Id = id;
                 x.Name = "Петр";
             });
 
@@ -159,7 +162,7 @@ namespace SchoolApplication.Services.Tests.Services
             // Assert
             var updated = await Context.Set<Student>().FindAsync(id);
             updated.Should().NotBeNull();
-            updated.Name.Should().Be("Петр");
+            updated.Name.Should().Be(updatedModel.Name);
         }
 
         /// <summary>
@@ -169,10 +172,11 @@ namespace SchoolApplication.Services.Tests.Services
         public async Task EditShouldThrowNotFoundException()
         {
             // Arrange
-            var model = TestDataGenerator.StudentModel();
+            var id = Guid.NewGuid();
+            var model = TestDataGenerator.StudentCreateModel();
 
             // Act
-            var result = () => studentService.Edit(model.Id, model, CancellationToken.None);
+            var result = () => studentService.Edit(id, model, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();

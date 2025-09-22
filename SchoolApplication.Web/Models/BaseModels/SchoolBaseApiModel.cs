@@ -1,15 +1,10 @@
-﻿namespace SchoolApplication.Web.Models.ResponseModels
+﻿namespace SchoolApplication.Web.Models.BaseModels
 {
     /// <summary>
-    /// API модель школы
+    /// Базовая API-модель школы
     /// </summary>
-    public class SchoolApiModel
+    public abstract class SchoolBaseApiModel
     {
-        /// <summary>
-        /// Идентификатор
-        /// </summary>
-        public Guid Id { get; set; }
-
         /// <summary>
         /// Название школы
         /// </summary>

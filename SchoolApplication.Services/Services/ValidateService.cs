@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using SchoolApplication.Services.Contracts;
 using SchoolApplication.Services.Contracts.Exceptions;
 using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Contracts.Services;

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Entities;
+using SchoolApplication.Entities.ValidationRules;
 using SchoolApplication.Web.Controllers;
 using SchoolApplication.Web.Tests.Client;
 using SchoolApplication.Web.Tests.Infrastructure;
@@ -25,6 +26,9 @@ namespace SchoolApplication.Web.Tests.Controllers
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            await Seeder.SeedParent(x => x.DeletedAt = DateTimeOffset.UtcNow);
+
             // Act
             var response = await WebClient.ParentAllAsync();
 
@@ -46,7 +50,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.ParentAllAsync();
 
             // Assert
-            response.Should().ContainSingle(x => x.Id == parent.Id);
+            response.Should()
+                .ContainSingle(x => x.Id == parent.Id && x.Name == parent.Name);
         }
 
         /// <summary>
@@ -69,7 +74,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.ParentGETAsync(parent.Id);
 
             // Assert
-            response.Should().BeEquivalentTo(expectedResult);
+            response.Should()
+                .BeEquivalentTo(expectedResult);
         }
 
         /// <summary>
@@ -90,7 +96,12 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.ParentPOSTAsync(model);
 
             // Assert
-            response.Should().BeEquivalentTo(model);
+            response.Should()
+                .BeEquivalentTo(model);
+
+            var all = await WebClient.ParentAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Name == model.Name);
         }
 
         /// <summary>
@@ -102,9 +113,9 @@ namespace SchoolApplication.Web.Tests.Controllers
             // Arrange
             var model = new ParentCreateRequestApiModel
             {
-                Name = "1",
-                Surname = "1",
-                Patronymic = "1",
+                Surname = new string('1', ParentValidationRules.SurnameMinLength - 1),
+                Name = new string('1', ParentValidationRules.NameMinLength - 1),
+                Patronymic = new string('1', ParentValidationRules.PatronymicMinLength - 1),
             };
 
             // Act
@@ -135,8 +146,13 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.ParentPUTAsync(parent.Id, model);
 
             // Assert
-            response.Patronymic
-                .Should().Be(model.Patronymic);
+            response.Should()
+                .BeEquivalentTo(model, opt => opt
+                    .ExcludingMissingMembers());
+
+            var all = await WebClient.ParentAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Name == model.Name);
         }
 
         /// <summary>
@@ -149,9 +165,9 @@ namespace SchoolApplication.Web.Tests.Controllers
             var parent = await Seeder.SeedParent();
             var model = new ParentCreateRequestApiModel
             {
-                Surname = "1",
-                Name = "1",
-                Patronymic = "1",
+                Surname = new string('1', ParentValidationRules.SurnameMinLength - 1),
+                Name = new string('1', ParentValidationRules.NameMinLength - 1),
+                Patronymic = new string('1', ParentValidationRules.PatronymicMinLength - 1),
             };
 
             // Act
@@ -176,8 +192,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             await WebClient.ParentDELETEAsync(parent.Id);
 
             // Assert
-            var parents = await WebClient.ParentAllAsync();
-            parents.Should().BeEmpty();
+            var all = await WebClient.ParentAllAsync();
+            all.Should().BeEmpty();
         }
 
         async Task IAsyncLifetime.InitializeAsync()

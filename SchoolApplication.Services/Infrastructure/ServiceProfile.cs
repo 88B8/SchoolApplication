@@ -2,7 +2,6 @@
 using AutoMapper.Extensions.EnumMapping;
 using SchoolApplication.Entities;
 using SchoolApplication.Repositories.Contracts.Models;
-using SchoolApplication.Services.Contracts;
 using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Contracts.Models.Enums;
 using SchoolApplication.Services.Contracts.Models.RequestModels;

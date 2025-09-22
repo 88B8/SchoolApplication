@@ -51,10 +51,8 @@ namespace SchoolApplication.Web.Tests.Infrastructure
             }
         }
 
-        /// <inheritdoc cref="IAsyncLifetime.InitializeAsync"/>
-        public Task InitializeAsync() => Context.Database.MigrateAsync();
+        Task IAsyncLifetime.InitializeAsync() => Context.Database.MigrateAsync();
 
-        /// <inheritdoc cref="IAsyncLifetime.DisposeAsync"/>
         async Task IAsyncLifetime.DisposeAsync()
         {
             await Context.Database.EnsureDeletedAsync();

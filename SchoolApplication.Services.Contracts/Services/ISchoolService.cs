@@ -1,4 +1,5 @@
 ﻿using SchoolApplication.Entities;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Contracts.Models.RequestModels;
 
 namespace SchoolApplication.Services.Contracts.Services

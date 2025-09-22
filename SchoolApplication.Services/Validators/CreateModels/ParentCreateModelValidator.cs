@@ -1,7 +1,6 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using FluentValidation;
-using SchoolApplication.Entities.Contracts.ValidationRules;
-using SchoolApplication.Services.Contracts;
+﻿using FluentValidation;
+using SchoolApplication.Entities.ValidationRules;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
 
 namespace SchoolApplication.Services.Validators.CreateModels
 {

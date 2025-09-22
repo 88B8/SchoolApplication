@@ -2,6 +2,7 @@
 using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities;
 using SchoolApplication.Repositories.Contracts.ReadRepositories;
+using SchoolApplication.Repositories.Specs;
 
 namespace SchoolApplication.Repositories.ReadRepositories
 {

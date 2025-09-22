@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SchoolApplication.Entities.Contracts.ValidationRules;
+using SchoolApplication.Entities.ValidationRules;
 
 namespace SchoolApplication.Entities.Configurations
 {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation.TestHelper;
-using SchoolApplication.Entities.Contracts.ValidationRules;
-using SchoolApplication.Services.Contracts;
+using SchoolApplication.Entities.ValidationRules;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Validators.CreateModels;
 using SchoolApplication.Tests.Extensions;
 

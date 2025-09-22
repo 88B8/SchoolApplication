@@ -1,18 +1,9 @@
-﻿namespace SchoolApplication.Services.Contracts
+﻿using SchoolApplication.Services.Contracts.Models.BaseModels;
+
+namespace SchoolApplication.Services.Contracts.Models.CreateModels
 {
     /// <summary>
     /// Модель создания школы
     /// </summary>
-    public class SchoolCreateModel
-    {
-        /// <summary>
-        /// Название школы
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Имя директора школы
-        /// </summary>
-        public string DirectorName { get; set; } = string.Empty;
-    }
+    public class SchoolCreateModel : SchoolBaseModel;
 }

@@ -1,15 +1,10 @@
-﻿namespace SchoolApplication.Web.Models.ResponseModels
+﻿namespace SchoolApplication.Services.Contracts.Models.BaseModels
 {
     /// <summary>
-    /// API модель родителя
+    /// Базовая модель родителя
     /// </summary>
-    public class ParentApiModel
+    public abstract class ParentBaseModel
     {
-        /// <summary>
-        /// Идентификатор
-        /// </summary>
-        public Guid Id { get; set; }
-
         /// <summary>
         /// Фамилия
         /// </summary>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SchoolApplication.Common;
 
-namespace SchoolApplication.Repositories
+namespace SchoolApplication.Repositories.Extensions
 {
     /// <summary>
     /// Расширение для <see cref="IServiceCollection"/>

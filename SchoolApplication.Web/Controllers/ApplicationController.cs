@@ -6,7 +6,7 @@ using SchoolApplication.Services.Contracts.Models.RequestModels;
 using SchoolApplication.Services.Contracts.Services;
 using SchoolApplication.Web.Exceptions;
 using SchoolApplication.Web.Models.CreateRequestApiModels;
-using SchoolApplication.Web.Models.ResponseModels;
+using SchoolApplication.Web.Models.ResponseApiModels;
 
 namespace SchoolApplication.Web.Controllers
 {
@@ -36,7 +36,7 @@ namespace SchoolApplication.Web.Controllers
         /// <summary>
         /// Экспортирует заявление по идентификатору
         /// </summary>
-        [HttpGet("{id:guid}/export")]
+        [HttpGet("{id:guid}/Export")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiExceptionDetail), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ExportById(Guid id, CancellationToken cancellationToken)

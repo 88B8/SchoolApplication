@@ -3,8 +3,8 @@ using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities;
 using SchoolApplication.Repositories.Contracts.ReadRepositories;
 using SchoolApplication.Repositories.Contracts.WriteRepositories;
-using SchoolApplication.Services.Contracts;
 using SchoolApplication.Services.Contracts.Exceptions;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Contracts.Models.RequestModels;
 using SchoolApplication.Services.Contracts.Services;
 
@@ -60,13 +60,12 @@ namespace SchoolApplication.Services.Services
 
         async Task<ParentModel> IParentService.Edit(Guid id, ParentCreateModel model, CancellationToken cancellationToken)
         {
-            var dbModel = await parentReadRepository.GetById(id, cancellationToken)
+            var entity = await parentReadRepository.GetById(id, cancellationToken)
                 ?? throw new SchoolApplicationNotFoundException($"Не удалось найти родителя с идентификатором {id}");
 
-            var entityToUpdate = mapper.Map<Parent>(dbModel);
-            mapper.Map(model, entityToUpdate);
+            mapper.Map(model, entity);
 
-            parentWriteRepository.Update(entityToUpdate);
+            parentWriteRepository.Update(entity);
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
             var updatedEntity = await parentReadRepository.GetById(id, cancellationToken);

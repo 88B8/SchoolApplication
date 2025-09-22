@@ -1,5 +1,4 @@
 ﻿using SchoolApplication.Entities;
-using SchoolApplication.Services.Contracts;
 using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Contracts.Models.Enums;
 using SchoolApplication.Services.Contracts.Models.RequestModels;
@@ -108,7 +107,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.ParentCreateModel"/>
+        /// Создает <see cref="Services.Contracts.Models.CreateModels.ParentCreateModel"/>
         /// </summary>
         public static ParentCreateModel ParentCreateModel(Action<ParentCreateModel>? settings = null)
         {
@@ -124,7 +123,7 @@ namespace SchoolApplication.Tests.Extensions
         }
 
         /// <summary>
-        /// Создает <see cref="Services.Contracts.SchoolCreateModel"/>
+        /// Создает <see cref="Services.Contracts.Models.CreateModels.SchoolCreateModel"/>
         /// </summary>
         public static SchoolCreateModel SchoolCreateModel(Action<SchoolCreateModel>? settings = null)
         {

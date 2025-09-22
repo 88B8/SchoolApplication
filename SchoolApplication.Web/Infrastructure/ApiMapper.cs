@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using SchoolApplication.Services.Contracts;
 using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Contracts.Models.RequestModels;
 using SchoolApplication.Web.Models.CreateRequestApiModels;
-using SchoolApplication.Web.Models.ResponseModels;
+using SchoolApplication.Web.Models.ResponseApiModels;
 
 namespace SchoolApplication.Web.Infrastructure
 {

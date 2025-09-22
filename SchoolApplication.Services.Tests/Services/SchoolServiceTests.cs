@@ -11,7 +11,6 @@ using SchoolApplication.Services.Contracts.Exceptions;
 using SchoolApplication.Services.Services;
 using SchoolApplication.Services.Infrastructure;
 using SchoolApplication.Services.Contracts.Services;
-using SchoolApplication.Services.Tests.Validators;
 
 namespace SchoolApplication.Services.Tests.Services
 {
@@ -50,7 +49,8 @@ namespace SchoolApplication.Services.Tests.Services
             // Arrange
             var school1 = TestDataGenerator.School();
             var school2 = TestDataGenerator.School();
-            await Context.AddRangeAsync(school1, school2);
+            var school3 = TestDataGenerator.School(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.AddRange(school1, school2, school3);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -58,8 +58,7 @@ namespace SchoolApplication.Services.Tests.Services
 
             // Assert
             result.Should()
-                .NotBeEmpty()
-                .And.HaveCount(2);
+                .HaveCount(2);
         }
 
         /// <summary>
@@ -68,13 +67,17 @@ namespace SchoolApplication.Services.Tests.Services
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            var school = TestDataGenerator.School(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.Add(school);
+            await UnitOfWork.SaveChangesAsync();
+
             // Act
             var result = await schoolService.GetAll(CancellationToken.None);
 
             // Assert
             result.Should()
-                .NotBeNull()
-                .And.BeEmpty();
+                .BeEmpty();
         }
 
         /// <summary>
@@ -148,9 +151,8 @@ namespace SchoolApplication.Services.Tests.Services
             Context.Add(application);
             await UnitOfWork.SaveChangesAsync();
 
-            var updatedModel = TestDataGenerator.SchoolModel(x =>
+            var updatedModel = TestDataGenerator.SchoolCreateModel(x =>
             {
-                x.Id = id;
                 x.Name = "Школа 2";
             });
 
@@ -160,7 +162,7 @@ namespace SchoolApplication.Services.Tests.Services
             // Assert
             var updated = await Context.Set<School>().FindAsync(id);
             updated.Should().NotBeNull();
-            updated.Name.Should().Be("Школа 2");
+            updated.Name.Should().Be(updatedModel.Name);
         }
 
         /// <summary>
@@ -170,10 +172,11 @@ namespace SchoolApplication.Services.Tests.Services
         public async Task EditShouldThrowNotFoundException()
         {
             // Arrange
-            var model = TestDataGenerator.SchoolModel();
+            var id = Guid.NewGuid();
+            var model = TestDataGenerator.SchoolCreateModel();
 
             // Act
-            var result = () => schoolService.Edit(model.Id, model, CancellationToken.None);
+            var result = () => schoolService.Edit(id, model, CancellationToken.None);
 
             // Assert
             await result.Should().ThrowAsync<SchoolApplicationNotFoundException>();

@@ -3,8 +3,8 @@ using SchoolApplication.Context.Contracts;
 using SchoolApplication.Entities;
 using SchoolApplication.Repositories.Contracts.ReadRepositories;
 using SchoolApplication.Repositories.Contracts.WriteRepositories;
-using SchoolApplication.Services.Contracts;
 using SchoolApplication.Services.Contracts.Exceptions;
+using SchoolApplication.Services.Contracts.Models.CreateModels;
 using SchoolApplication.Services.Contracts.Models.RequestModels;
 using SchoolApplication.Services.Contracts.Services;
 

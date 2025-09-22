@@ -1,13 +1,13 @@
-﻿using SchoolApplication.Entities.Contracts;
-
-namespace SchoolApplication.Entities
+﻿namespace SchoolApplication.Entities
 {
     /// <summary>
     /// Модель заявления
     /// </summary>
-    public class Application : BaseAuditEntity, IEntityWithParentId, IEntityWithStudentId, IEntityWithSchoolId
-    {
-        /// <inheritdoc cref="IEntityWithStudentId"/>
+    public class Application : BaseAuditEntity
+    { 
+        /// <summary>
+        /// Идентификатор ученика
+        /// </summary>
         public Guid StudentId { get; set; }
 
         /// <summary>
@@ -15,7 +15,9 @@ namespace SchoolApplication.Entities
         /// </summary>
         public Student Student { get; set; } = null!;
 
-        /// <inheritdoc cref="IEntityWithParentId"/>
+        /// <summary>
+        /// Идентификатор родителя
+        /// </summary>
         public Guid ParentId { get; set; }
 
         /// <summary>
@@ -23,7 +25,9 @@ namespace SchoolApplication.Entities
         /// </summary>
         public Parent Parent { get; set; } = null!;
 
-        /// <inheritdoc cref="IEntityWithSchoolId"/>
+        /// <summary>
+        /// Идентификатор школы
+        /// </summary>
         public Guid SchoolId { get; set; }
 
         /// <summary>

@@ -55,8 +55,8 @@ namespace SchoolApplication.Services.Tests.Services
             // Arrange
             var application1 = TestDataGenerator.Application();
             var application2 = TestDataGenerator.Application();
-            var application3 = TestDataGenerator.Application(x => x.DeletedAt = DateTimeOffset.UtcNow );
-            await Context.AddRangeAsync(application1, application2, application3);
+            var application3 = TestDataGenerator.Application(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.AddRange(application1, application2, application3);
             await UnitOfWork.SaveChangesAsync();
 
             // Act
@@ -73,13 +73,17 @@ namespace SchoolApplication.Services.Tests.Services
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            var application = TestDataGenerator.Application(x => x.DeletedAt = DateTimeOffset.UtcNow);
+            Context.Add(application);
+            await UnitOfWork.SaveChangesAsync();
+
             // Act
             var result = await applicationService.GetAll(CancellationToken.None);
 
             // Assert
             result.Should()
-                .NotBeNull()
-                .And.BeEmpty();
+                .BeEmpty();
         }
 
         /// <summary>

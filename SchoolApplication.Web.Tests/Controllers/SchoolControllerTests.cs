@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SchoolApplication.Entities;
+using SchoolApplication.Entities.ValidationRules;
 using SchoolApplication.Web.Controllers;
 using SchoolApplication.Web.Tests.Client;
 using SchoolApplication.Web.Tests.Infrastructure;
@@ -25,6 +26,9 @@ namespace SchoolApplication.Web.Tests.Controllers
         [Fact]
         public async Task GetAllShouldReturnEmpty()
         {
+            // Arrange
+            await Seeder.SeedSchool(x => x.DeletedAt = DateTimeOffset.UtcNow);
+
             // Act
             var response = await WebClient.SchoolAllAsync();
 
@@ -40,12 +44,14 @@ namespace SchoolApplication.Web.Tests.Controllers
         {
             // Arrange
             var school = await Seeder.SeedSchool();
+            await Seeder.SeedParent(x => x.DeletedAt = DateTimeOffset.UtcNow);
 
             // Act
             var response = await WebClient.SchoolAllAsync();
 
             // Assert
-            response.Should().ContainSingle(x => x.Id == school.Id);
+            response.Should()
+                .ContainSingle(x => x.Id == school.Id && x.Name == school.Name);
         }
 
         /// <summary>
@@ -67,7 +73,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.SchoolGETAsync(school.Id);
 
             // Assert
-            response.Should().BeEquivalentTo(expectedResult);
+            response.Should()
+                .BeEquivalentTo(expectedResult);
         }
 
         /// <summary>
@@ -87,7 +94,12 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.SchoolPOSTAsync(model);
 
             // Assert
-            response.Should().BeEquivalentTo(model);
+            response.Should()
+                .BeEquivalentTo(model);
+
+            var all = await WebClient.SchoolAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Name == model.Name);
         }
 
         /// <summary>
@@ -99,8 +111,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             // Arrange
             var model = new SchoolCreateRequestApiModel
             {
-                Name = "1",
-                DirectorName = "1",
+                Name = new string('1', SchoolValidationRules.NameMinLength - 1),
+                DirectorName = new string('1', SchoolValidationRules.DirectorNameMinLength - 1),
             };
 
             // Act
@@ -130,8 +142,13 @@ namespace SchoolApplication.Web.Tests.Controllers
             var response = await WebClient.SchoolPUTAsync(school.Id, model);
 
             // Assert
-            response.DirectorName.Should()
-                .Be(model.DirectorName);
+            response.Should()
+                .BeEquivalentTo(model, opt => opt
+                    .ExcludingMissingMembers());
+
+            var all = await WebClient.SchoolAllAsync();
+            all.Should()
+                .ContainSingle(x => x.Name == model.Name);
         }
 
         /// <summary>
@@ -144,8 +161,8 @@ namespace SchoolApplication.Web.Tests.Controllers
             var school = await Seeder.SeedSchool();
             var model = new SchoolCreateRequestApiModel()
             {
-                Name = "1",
-                DirectorName = "1",
+                Name = new string('1', SchoolValidationRules.NameMinLength - 1),
+                DirectorName = new string('1', SchoolValidationRules.DirectorNameMinLength - 1),
             };
 
             // Act
@@ -168,10 +185,10 @@ namespace SchoolApplication.Web.Tests.Controllers
 
             // Act
             await WebClient.SchoolDELETEAsync(school.Id);
-            var schools = await WebClient.SchoolAllAsync();
 
             // Assert
-            schools.Should().BeEmpty();
+            var all = await WebClient.SchoolAllAsync();
+            all.Should().BeEmpty();
         }
 
         async Task IAsyncLifetime.InitializeAsync()

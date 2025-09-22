@@ -1,9 +1,11 @@
-﻿namespace SchoolApplication.Services.Contracts.Models.RequestModels
+﻿using SchoolApplication.Services.Contracts.Models.BaseModels;
+
+namespace SchoolApplication.Services.Contracts.Models.RequestModels
 {
     /// <summary>
     /// Модель родителя
     /// </summary>
-    public class ParentModel : ParentCreateModel
+    public class ParentModel : ParentBaseModel
     {
         /// <summary>
         /// Идентификатор
