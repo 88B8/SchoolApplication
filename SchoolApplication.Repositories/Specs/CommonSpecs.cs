@@ -1,0 +1,35 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SchoolApplication.Entities.Contracts;
+using System.Collections.ObjectModel;
+
+namespace SchoolApplication.Repositories.Specs
+{
+    /// <summary>
+    /// Общие спецификации
+    /// </summary>
+    public static class CommonSpecs
+    {
+        /// <summary>
+        /// Активные. Не удаленные
+        /// </summary>
+        public static IQueryable<TEntity> NotDeletedAt<TEntity>(this IQueryable<TEntity> query)
+            where TEntity : class, IEntitySoftDeleted
+            => query.Where(x => x.DeletedAt == null);
+
+        /// <summary>
+        /// По идентификатору
+        /// </summary>
+        public static IQueryable<TEntity> ById<TEntity>(this IQueryable<TEntity> query, Guid id)
+            where TEntity : class, IEntityWithId
+            => query.Where(x => x.Id == id);
+
+        /// <summary>
+        /// Возвращает <see cref="IReadOnlyCollection{TEntity}"/>
+        /// </summary>
+        public static Task<IReadOnlyCollection<TEntity>> ToReadOnlyCollectionAsync<TEntity>(this IQueryable<TEntity> query,
+            CancellationToken cancellationToken)
+            => query.ToListAsync(cancellationToken)
+                .ContinueWith(x => new ReadOnlyCollection<TEntity>(x.Result) as IReadOnlyCollection<TEntity>,
+                    cancellationToken);
+    }
+}

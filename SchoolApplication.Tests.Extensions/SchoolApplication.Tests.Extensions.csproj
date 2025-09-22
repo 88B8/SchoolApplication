@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <RootNamespace>SchoolApplication.Tests.Extensions</RootNamespace>
+	  <AssemblyName>SchoolApplication.Tests.Extensions</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataBase\SchoolApplication.Context\SchoolApplication.Context.csproj" />
+    <ProjectReference Include="..\DataBase\SchoolApplication.Entities\SchoolApplication.Entities.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Services.Contracts\SchoolApplication.Services.Contracts.csproj" />
+    <ProjectReference Include="..\SchoolApplication.Web\SchoolApplication.Web.csproj" />
+  </ItemGroup>
+
+</Project>
